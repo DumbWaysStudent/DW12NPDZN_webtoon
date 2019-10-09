@@ -50,4 +50,3 @@ const Switch = createSwitchNavigator({
 
 export default createAppContainer(Switch);
 
-// export default DetailEp

@@ -38,7 +38,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
             },
             headerRight: (
                 <Icon type="FontAwesome" name="share-alt" style={styles.Share}  
-                
+                onPress = {() => Share.share({message:"share kewibuanmu"})}
                 />
               ),
             };
