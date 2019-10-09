@@ -9,42 +9,41 @@ import {
   } 
   from 'native-base';
 import { StyleSheet, FlatList, Dimensions, Share, Image} from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
-  export default class ForYou extends Component{
-    BannerWidth = Dimensions.get('window').width;
+  export default class DetailWebtoon extends Component{
+
     constructor(){
         super();
         this.state = {
-          banners: [{
+          details: [{
             ep: 'Ep.6',
             date:'09 October 2019',
-            image: 'https://image.shutterstock.com/image-illustration/3d-shiny-red-number-collection-260nw-120044446.jpg'
+            image: 'https://dw9to29mmj727.cloudfront.net/products/1421585278.jpg'
         }, {
             ep: 'Ep.5',
             date:'08 October 2019',
-            image: 'https://image.shutterstock.com/image-photo/green-wooden-number-five-without-260nw-1466092421.jpg'
+            image: 'https://dw9to29mmj727.cloudfront.net/products/142156954X.jpg'
         }, {
             ep: 'Ep.4',
             date:'07 October 2019',
-            image: 'https://image.shutterstock.com/image-vector/black-white-abstract-three-dimensional-600w-510933106.jpg'
+            image: 'https://dw9to29mmj727.cloudfront.net/products/1421569205.jpg'
         }, {
             ep: 'Ep.3',
             date:'06 October 2019',
-            image: 'https://image.shutterstock.com/image-illustration/3d-illustration-number-three-polished-600w-1062245048.jpg'
+            image: 'https://dw9to29mmj727.cloudfront.net/products/1421564610.jpg'
         }, {
             ep: 'Ep.2',
             date:'05 October 2019',
-            image: 'https://image.shutterstock.com/image-illustration/glossy-pink-paint-number-2-600w-582499507.jpg'
+            image: 'https://dw9to29mmj727.cloudfront.net/products/1421585650.jpg'
         }, {
             ep: 'Ep.1',
             date:'04 October 2019',
-            image: 'https://image.shutterstock.com/image-illustration/number-one-web-sticker-button-600w-1443474482.jpg'
+            image: 'https://dw9to29mmj727.cloudfront.net/products/1421585642.jpg'
         }],
          }
     }
-
-    
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -56,7 +55,9 @@ import { StyleSheet, FlatList, Dimensions, Share, Image} from 'react-native'
                 fontWeight: 'bold',
             },
             headerRight: (
-                <Icon type="FontAwesome" name="share-alt" style={styles.Share} />
+                <Icon type="FontAwesome" name="share-alt" style={styles.Share}  
+                
+                />
               ),
             };
     }
@@ -66,20 +67,28 @@ import { StyleSheet, FlatList, Dimensions, Share, Image} from 'react-native'
         <Container>
         <Content style={styles.Content} >
         <View style={styles.BigPictCon}>   
-             <Image 
+            <Image 
              source={{ uri : this.props.navigation.getParam('detail')}} 
              style={styles.BigPict}
-             />         
+             />                        
         </View>
        
         <View style={styles.AllCon}> 
             <FlatList
-              data = {this.state.banners}
+              data = {this.state.details}
               keyExtractor = {item => item.id}
               renderItem = {({item}) => 
               <View style={styles.AllCont} key={item.image}>
                 <Row>
-                  <Image style={styles.AllImg} source={{ uri: item.image }} />
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('DetailEp', {
+                    title: item.ep
+                  })}
+                >
+                  <Image 
+                  style={styles.AllImg} 
+                  source={{ uri: item.image }} 
+                  />
+                </TouchableOpacity>
                   <View style={styles.AllDes}>
                     <Text style={styles.AllEp}>{item.ep}</Text>
                     <Text style={styles.AllDate}>{item.date}</Text>

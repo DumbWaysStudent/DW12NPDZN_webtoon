@@ -6,6 +6,7 @@ import { createStackNavigator,  } from 'react-navigation-stack';
 import Login from './screens/Login'
 import ForYou from './screens/ForYou'
 import DetailWebtoon from './screens/DetailWebtoon'
+import DetailEp from './screens/DetailEpisode'
 
 const SignedOut = createStackNavigator(
     {
@@ -22,31 +23,31 @@ const SignedOut = createStackNavigator(
 
 const SignedIn = createStackNavigator(
     {
-        ForYou: {
-            screen: ForYou,
-            title: 'ForYou',
-            navigationOptions: {header: null},
-          },
-        DetailWebtoon: {
-            screen: DetailWebtoon,
-            title: 'Detail Webtoon',
-        }       
+    ForYou: {
+        screen: ForYou,
+        title: 'ForYou',
+        navigationOptions: {header: null},
+        },
+    DetailWebtoon: {
+        screen: DetailWebtoon,
+        title: 'Detail Webtoon',
     },
-    {
-        initialRouteName: 'ForYou',
-    }
-    );
-
+    DetailEp: {
+        screen: DetailEp,
+        title: 'Detail Episode'
+    }, 
+     initialRouteName: 'ForYou',
+    });
 
 const Switch = createSwitchNavigator({
     SignedIn: SignedIn, 
     SignedOut: SignedOut
     },
     {
-    initialRouteName: "SignedOut",
+     initialRouteName: "SignedOut",
     });
 
 
 export default createAppContainer(Switch);
 
-// export default DetailWebtoon
+// export default DetailEp
