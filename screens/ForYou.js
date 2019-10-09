@@ -16,6 +16,7 @@ import {
   from 'native-base';
 import { StyleSheet, ScrollView, Dimensions, Image} from 'react-native'
 import Carousel from 'react-native-banner-carousel';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
   export default class ForYou extends Component{
     BannerWidth = Dimensions.get('window').width;
@@ -56,43 +57,66 @@ import Carousel from 'react-native-banner-carousel';
         </Header>
 
         <Content style={styles.Content} >
+
         <View >
-            <Carousel 
-                autoplay
-                autoplayTimeout={3000}
-                loop  
-                pageSize={this.BannerWidth}      
-            >
-                {this.state.banners.map((image)=> (
-                <View style={styles.Carousel} key={image.image}>
-                    <Image style={styles.CarouselImg} source={{ uri: image.image }} />
-                </View>
-                ))}
-            </Carousel>
+          <Carousel 
+            autoplay
+            autoplayTimeout={3000}
+            loop  
+            pageSize={this.BannerWidth}      
+          >
+            {this.state.banners.map((image)=> (
+            <View style={styles.Carousel} key={image.image}>
+              <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('DetailWebtoon', {
+                  detail: image.image,
+                  title: image.title
+                })}
+                >
+                <Image style={styles.CarouselImg} source={{ uri: image.image }} /> 
+              </TouchableOpacity> 
+            </View>
+            ))}
+          </Carousel>  
         </View>
+        
         <View style={styles.ScrollView}>
-            <Text style={styles.Fav}>Favourite</Text>
-            <ScrollView horizontal={true}>
-                {this.state.banners.map((image)=> (
-                <View style={styles.ScrollViewCon} key={image.image}>
-                    <Image style={styles.ScrollViewImg} source={{ uri: image.image }} />
-                    <Text>{image.title}</Text>
-                </View>))}
-            </ScrollView>    
+          <Text style={styles.Fav}>Favourite</Text>
+          <ScrollView horizontal={true}>
+            {this.state.banners.map((image)=> (   
+            <View style={styles.ScrollViewCon} key={image.image}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('DetailWebtoon', {
+                  detail: image.image,
+                  title: image.title
+                })}
+                >
+                <Image style={styles.ScrollViewImg} source={{ uri: image.image }} />
+                <Text>{image.title}</Text>
+                </TouchableOpacity>         
+            </View>))}
+          </ScrollView>    
         </View>
         <View style={styles.AllCon}>
             <Text style={styles.All}>All</Text>
             {this.state.banners.map((image)=> (
-            <View style={styles.AllCont} key={image.image}>
+            <View style={styles.AllCont} key={image.image}>  
                 <Row>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('DetailWebtoon', {
+                    detail: image.image,
+                    title: image.title
+                  })}
+                    >
                   <Image style={styles.AllImg} source={{ uri: image.image }} />
+                </TouchableOpacity>
                   <View style={styles.AllDes}>
                     <Text style={styles.AllTitle}>{image.title}</Text>
                      <Button warning small style={styles.AllButton}>
                         <Text style={styles.AllFav}>+ Favourite</Text>
                      </Button>        
                   </View>
-                </Row>
+                </Row>  
             </View>))}                
         </View>
         </Content>

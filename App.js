@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import { createAppContainer, createSwitchNavigator} from 'react-navigation';
 import { createStackNavigator,  } from 'react-navigation-stack';
 
+
 import Login from './screens/Login'
 import ForYou from './screens/ForYou'
-
+import DetailWebtoon from './screens/DetailWebtoon'
 
 const SignedOut = createStackNavigator(
     {
@@ -25,7 +26,11 @@ const SignedIn = createStackNavigator(
             screen: ForYou,
             title: 'ForYou',
             navigationOptions: {header: null},
-          }     
+          },
+        DetailWebtoon: {
+            screen: DetailWebtoon,
+            title: 'Detail Webtoon',
+        }       
     },
     {
         initialRouteName: 'ForYou',
@@ -44,3 +49,4 @@ const Switch = createSwitchNavigator({
 
 export default createAppContainer(Switch);
 
+// export default DetailWebtoon
