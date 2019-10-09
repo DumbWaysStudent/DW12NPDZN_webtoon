@@ -103,6 +103,7 @@ import {
               </Form>
               <Button 
               success disabled = {this.state.isDisabled} rounded block style={styles.button}
+              onPress={() => this.props.navigation.navigate('ForYou')}
               >
                 <Text >Log In</Text>
               </Button>
