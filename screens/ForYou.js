@@ -121,19 +121,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
         </View>
         </Content>
 
-        <Footer>
-          <FooterTab style={styles.FooterTab}>
-            <Button >
-              <Icon name="apps" style={styles.FooterButton}/>
-            </Button>
-            <Button >
-              <Icon name="star" style={styles.FooterButton}/>
-            </Button>
-            <Button>
-              <Icon name="person" style={styles.FooterButton}/>
-            </Button>
-          </FooterTab>
-        </Footer>
+        
         
       </Container>
       )
@@ -199,11 +187,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
       fontSize:12,
       color:'black', 
       fontWeight: 'bold'},
-    FooterTab: {
-      backgroundColor: "limegreen"},
-    FooterButton: {
-      fontSize: 30,
-      color:'white' }
+    
 
 
   })
