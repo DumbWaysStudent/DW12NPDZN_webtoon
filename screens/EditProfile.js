@@ -71,26 +71,26 @@ export default class EditProfile extends React.Component {
     });
   }
 
+  static navigationOptions = ({ navigation }) => {
+    return {
+        title: "Edit Profile",
+        headerStyle: {
+            backgroundColor: '#32cd32',
+            },
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+        headerRight: (
+            <Icon type="Entypo" name='check' style={styles.BBIcon} 
+            onPress = {() => navigation.navigate('Profile')}
+            />
+            ),
+        };
+    }
 
   render() {
     return (
       <Container>
-          <Header searchBar rounded style={styles.Header}>
-            <Left>
-            </Left>
-            <Body>
-                <Title style={styles.BB}>Edit Profile</Title>
-            </Body>
-            <Right>
-                <Button transparent 
-                onPress={() => this.props.navigation.navigate('Profile',{
-                    newPic: this.state.avatarSource,
-                    newUsername: this.state.username
-                })}>
-                <Icon type="Entypo" name='check' style={styles.BB}/>
-                </Button>
-            </Right>
-            </Header>
           <Content>
           <View style={styles.container}>
             <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
@@ -130,6 +130,12 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 21
     },
+  BBIcon: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 29,
+    marginRight: 20
+  },
   container: {
     flex: 1,
     paddingTop: 30,
@@ -144,7 +150,7 @@ const styles = StyleSheet.create({
   avatar: {
     borderRadius: 100,
     borderColor: 'black',
-    borderWidth: 1,
+    borderWidth: 2,
     width: 200,
     height: 200,
   },

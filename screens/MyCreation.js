@@ -9,59 +9,80 @@ import {
   Button, 
   Header,
   Row,
+  Left,
+  Body,
+  Right,
+  Title,
   Footer,
+  Fab,
   FooterTab,
   Icon,  
   } 
   from 'native-base';
 import { StyleSheet, ScrollView, Dimensions, FlatList, Image} from 'react-native'
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
-  export default class Fav extends Component{
+  export default class MyCreation extends Component{
 
     constructor(){
         super();
         this.state = {
-            favourites: [{
+            active: false,
+            MyCreation: [{
                 title: 'Tokyo Ghoul',
-                fav:'100+ favourite',
+                eps:'10 episode(s)',
                 image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5319-SeriesHeaders_TKG_2000x800_REV.jpg'
             }, {
                 title: 'Astra Lost in Space',
-                fav:'1000+ favourite',
+                eps:'100 episode(s)',
                 image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5806-SeriesHeaders_Astra_2000x800.jpg'
             }, {
                 title: 'Bakuman',
-                fav:'500+ favourite',
+                eps:'50 episode(s)',
                 image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5487-Tier04_SeriesHeaders_BAK_v2_2000x800.jpg'
             }, {
                 title: 'Blue Exorcist',
-                fav:'200+ favourite',
+                eps:'20 episode(s)',
                 image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5392-SeriesHeader_Tier02_BEX_2000x800.jpg'
             }, {
                 title: 'The Promised Neverland',
-                fav:'400+ favourite',
+                eps:'40 episode(s)',
                 image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5868-SeriesHeaders_PromisedNeverland_2000x800.jpg'
             }, {
                 title: 'Assassination Classroom',
-                fav:'700+ favourite',
+                eps:'70 episode(s)',
                 image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5342-SeriesHeaders_Tier01_ASC_v2_2000x800.jpg'
-            }],
-          
+            }],  
         }}
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: "My Creation",
+            headerStyle: {
+                backgroundColor: '#32cd32',
+                },
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+            };
+        }
 
     render(){
         return(
         <Container>
-            <Header searchBar rounded style={styles.Header}>
-              <Item rounded>
-                <Input placeholder="Search" />
-                <Icon name="search" style={styles.HeaderIcon}/>
-              </Item>
-            </Header>
+            <View style={{ flex: 1 }}> 
+                <Fab
+                    style={{ backgroundColor: '#bb2124' }}
+                    position="bottomRight"
+                    >
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}>
+                    <Icon type="FontAwesome" name="plus" style={{fontSize:35, color: 'white'}} />
+                </TouchableOpacity>    
+                </Fab>
             <Content style={styles.Content}>
               <View style={styles.AllCon}>    
                 <FlatList
-                data = {this.state.favourites}
+                data = {this.state.MyCreation}
                 keyExtractor = {item => item.id}
                 renderItem = {({item}) => 
                 <View style={styles.AllCont} key={item.image}>
@@ -69,13 +90,15 @@ import { StyleSheet, ScrollView, Dimensions, FlatList, Image} from 'react-native
                     <Image style={styles.AllImg} source={{ uri: item.image }} /> 
                     <View style={styles.AllDes}>
                         <Text style={styles.AllTitle}>{item.title}</Text>
-                        <Text style={styles.AllStar}>{item.fav}</Text>
+                        <Text style={styles.AllStar}>{item.eps}</Text>
                     </View>
                     </Row>
                 </View>
                 }/>  
               </View>
             </Content>
+            </View>
+            
         </Container>
         ) 
     }
@@ -83,10 +106,19 @@ import { StyleSheet, ScrollView, Dimensions, FlatList, Image} from 'react-native
 
   const styles = StyleSheet.create({
     Header: {
-      backgroundColor: "limegreen"},
-    HeaderIcon: {
-      paddingRight: 17, 
-      fontSize:30},
+      backgroundColor: "limegreen",
+    },
+    BB: {
+      fontWeight: 'bold',
+      color: 'black',
+      fontSize: 21,
+    },
+    BBIcon: {
+      fontWeight: 'bold',
+      color: 'black',
+      fontSize: 24,
+      marginRight:20
+      },
     Content: {
       paddingVertical: 20},
     AllCon: {
@@ -111,3 +143,4 @@ import { StyleSheet, ScrollView, Dimensions, FlatList, Image} from 'react-native
       fontSize: 13
     },
   })
+

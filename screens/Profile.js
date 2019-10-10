@@ -53,7 +53,7 @@ export default class Profile extends Component{
                   pic: this.state.pic,
                   username: this.state.username
                 })}>
-                    <Icon type="Entypo" name='edit' style={styles.BB}/>
+                    <Icon type="Entypo" name='edit' style={styles.BBIcon}/>
                     </Button>
                 </Right>
                 </Header>
@@ -62,13 +62,17 @@ export default class Profile extends Component{
                          <Image style={styles.Img} source={{uri: this.state.pic }}/>
                          <Text style={styles.Username}>{this.state.username}</Text>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('MyCreation')}
+                    >
                         <Row style={styles.MyCreation}>
                           <Text style={styles.MyCreationText} >My Creation</Text>
                           <Icon type="AntDesign" name="right"/>
                         </Row>   
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('Login')}
+                    >
                         <Text style={styles.LogOut}>Log Out</Text>
                     </TouchableOpacity>
                 </Content>
@@ -85,8 +89,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'black',
         fontSize: 21,
-        
     },
+    BBIcon: {
+        fontWeight: 'bold',
+        color: 'black',
+        fontSize: 24
+      },
     ImgCont: {
         borderBottomWidth: 1, 
         borderColor: "black", 

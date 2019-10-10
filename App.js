@@ -23,7 +23,7 @@ import DetailEp from './screens/DetailEpisode'
 import Favourite from './screens/Favourite'
 import Profile from './screens/Profile'
 import EditProfile from './screens/EditProfile'
-
+import MyCreation from './screens/MyCreation'
 
 const SignedOut = createStackNavigator(
     {
@@ -68,9 +68,34 @@ const EditProfileStack = createStackNavigator(
     EditProfile: {
       screen: EditProfile,
       title: "Edit Profile",
-      navigationOptions: {header: null},
+      
     }
   }
+)
+
+const MyCreationStack = createStackNavigator(
+  {
+    Profile: {
+      screen: Profile,
+      title: "Profile",
+      navigationOptions: {header: null},
+    },
+    MyCreation: {
+      screen: MyCreation,
+      title: "My Creation",
+      
+    }
+  }
+)
+
+const ProfileStack = createSwitchNavigator(
+  {
+    EditProfileStack: EditProfileStack,
+    MyCreationStack: MyCreationStack
+  },
+  {
+    initialRouteName: "EditProfileStack",
+   }
 )
 
 const BottomTab = createBottomTabNavigator({
@@ -80,7 +105,7 @@ const BottomTab = createBottomTabNavigator({
       title: "Favourite",
       navigationOptions: {header: null, },
     },
-    Profile: EditProfileStack
+    Profile: ProfileStack
   }, {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({horizontal,tintColor }) => {
@@ -97,12 +122,11 @@ const BottomTab = createBottomTabNavigator({
     }),
     tabBarOptions: {
       activeTintColor: 'black',
-      inactiveTintColor: 'gray',
+      inactiveTintColor: '#E1F7D5',
       style:{
-      backgroundColor: '#32cd32',
-      borderTopWidth: 1,
+      backgroundColor: '#22bb33',
       paddingTop: 5,
-      borderTopColor: 'green'
+      
     }
     },
     
@@ -120,6 +144,6 @@ const Switch = createSwitchNavigator({
 
 export default createAppContainer(Switch);
 
-// export default EditProfile
+// export default MyCreation
 
 
