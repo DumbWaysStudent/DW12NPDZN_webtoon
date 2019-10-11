@@ -18,18 +18,27 @@ import {
     } 
     from 'native-base';
 import { TextInput } from 'react-native-gesture-handler';
-export default class CreateEpisode extends Component {
+export default class CreateWebtoon extends Component {
 
 constructor(){
     super();
     this.state = {
-        chapter: [ {
-            ep: '1. cover.png',
-           
+        title: "Tokyo Ghoul",
+        chapter: [{
+            ep: 'Ep.4',
+            date:'07 October 2019',
+            image: 'https://dw9to29mmj727.cloudfront.net/products/1421569205.jpg'
+        }, {
+            ep: 'Ep.3',
+            date:'06 October 2019',
+            image: 'https://dw9to29mmj727.cloudfront.net/products/1421564610.jpg'
+        }, {
+            ep: 'Ep.2',
+            date:'05 October 2019',
             image: 'https://dw9to29mmj727.cloudfront.net/products/1421585650.jpg'
         }, {
-            ep: '2. introduction.png',
-            
+            ep: 'Ep.1',
+            date:'04 October 2019',
             image: 'https://dw9to29mmj727.cloudfront.net/products/1421585642.jpg'
         }],
         }
@@ -37,7 +46,7 @@ constructor(){
 
 static navigationOptions = ({ navigation }) => {
     return {
-        title: "Create Webtoon",
+        title: "Edit Webtoon",
         headerStyle: {
             backgroundColor: '#32cd32',
             },
@@ -46,7 +55,7 @@ static navigationOptions = ({ navigation }) => {
         },
         headerRight: (
             <Icon type="Entypo" name='check' style={styles.BBIcon} 
-            onPress = {() => navigation.navigate('CreateWebtoon')}
+            onPress = {() => navigation.navigate('MyCreation')}
             />
             ),
         };
@@ -57,12 +66,15 @@ render() {
     return (
         <Container>
         <Content style={{flex: 1, margin:15}}>
-        <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 7}}>Name</Text>
+        <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 7}}>Title</Text>
         <TextInput
-         placeholder='Name'
+         placeholder= 'Title'
+         value= {this.state.title}
+        //  onChangeText={username => this.setState({ username })}
+        //  value = {this.state.username}
         style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, textAlign:'center'}}
         />
-        <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 15}}>Add Images</Text>
+        <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 15}}>Episode</Text>
         <FlatList
             data = {this.state.chapter}
             keyExtractor = {item => item.id}
@@ -75,17 +87,22 @@ render() {
                 />
                 <View style={styles.AllDes}>
                 <Text style={styles.AllEp}>{item.ep}</Text>
-                <Button style={styles.AllButton}>
-                   <Text style={styles.AllFav}>Delete</Text>
-                </Button>
+                <Text style={styles.AllDate}>{item.date}</Text>
                 </View>
             </Row>
             </View>
         }/>                                  
         
-        <Button block rounded  style={{alignSelf: 'center', marginTop: 15}} >
-         <Text style={{fontSize:17}} >+ Add Image</Text>
-        </Button>  
+        <Button block rounded style={{alignSelf: 'center', marginTop: 15}} 
+        onPress={() => this.props.navigation.navigate('CreateEpisode')}
+        >
+         <Text style={{fontSize:17}} >+ Add Episode</Text>
+        </Button>
+        <Button block danger rounded style={{alignSelf: 'center', marginTop: 15}} 
+        onPress={() => this.props.navigation.navigate('MyCreation')}
+        >
+         <Text style={{fontSize:17}} >DELETE WEBTOON</Text>
+        </Button>
 
         </Content>
         </Container>
@@ -103,26 +120,18 @@ const styles = StyleSheet.create({
     AllCont: {
       marginBottom:15},
     AllImg: { 
-      width: 150, 
-      height: 150, 
+      width: 75, 
+      height: 75, 
       borderWidth: 2, 
       borderColor:'black', },
     AllDes: {
       marginLeft: 15, 
       flex:1, 
-      justifyContent:'space-around'},
+      justifyContent:'center'},
     AllEp: {
-      marginBottom: 10,
-      fontSize: 20,
+      marginBottom: 5,
       fontWeight:'bold' },
-    AllFav: {
-      fontSize:15,
-      color:'white', 
-      fontWeight: 'bold'},
-    AllButton: {
-      justifyContent: 'center',
-      width:110, 
-      backgroundColor: '#bb2124'
-      
-    },
+    AllDate: {
+      marginBottom: 5, 
+      fontSize: 13}
 })

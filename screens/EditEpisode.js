@@ -23,6 +23,7 @@ export default class CreateEpisode extends Component {
 constructor(){
     super();
     this.state = {
+        name: "Ep. 4",
         chapter: [ {
             ep: '1. cover.png',
            
@@ -46,7 +47,7 @@ static navigationOptions = ({ navigation }) => {
         },
         headerRight: (
             <Icon type="Entypo" name='check' style={styles.BBIcon} 
-            onPress = {() => navigation.navigate('CreateWebtoon')}
+            onPress = {() => navigation.navigate('EditWebtoon')}
             />
             ),
         };
@@ -60,6 +61,7 @@ render() {
         <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 7}}>Name</Text>
         <TextInput
          placeholder='Name'
+         value= {this.state.name}
         style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, textAlign:'center'}}
         />
         <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 15}}>Add Images</Text>
@@ -86,7 +88,11 @@ render() {
         <Button block rounded  style={{alignSelf: 'center', marginTop: 15}} >
          <Text style={{fontSize:17}} >+ Add Image</Text>
         </Button>  
-
+        <Button block danger rounded style={{alignSelf: 'center', marginTop: 15}} 
+        onPress={() => this.props.navigation.navigate('EditWebtoon')}
+        >
+         <Text style={{fontSize:17}} >DELETE EPISODE</Text>
+        </Button>
         </Content>
         </Container>
     );

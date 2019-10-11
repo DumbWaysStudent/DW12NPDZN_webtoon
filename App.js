@@ -26,134 +26,137 @@ import EditProfile from './screens/EditProfile'
 import MyCreation from './screens/MyCreation'
 import CreateWebtoon from './screens/CreateWebtoon'
 import CreateEpisode from './screens/CreateEpisode'
+import EditWebtoon from './screens/EditWebtoon'
+import EditEpisode from './screens/EditEpisode'
 
 
-const SignedOut = createStackNavigator(
-    {
-      Login: {
-        screen: Login,
-        title: 'Login',
-        navigationOptions: {header: null},
-      }
-    },
-    {
-      initialRouteName: 'Login',
-    }
-  );
 
-const ForYouStack = createStackNavigator(
-    {
-    ForYou: {
-        screen: ForYou,
-        title: "For You",
-        navigationOptions: {header: null}
-    },
-    DetailWebtoon: {
-        screen: DetailWebtoon,
-        title: 'Detail Webtoon',
+// const SignedOut = createStackNavigator(
+//     {
+//       Login: {
+//         screen: Login,
+//         title: 'Login',
+//         navigationOptions: {header: null},
+//       }
+//     },
+//     {
+//       initialRouteName: 'Login',
+//     }
+//   );
+
+// const ForYouStack = createStackNavigator(
+//     {
+//     ForYou: {
+//         screen: ForYou,
+//         title: "For You",
+//         navigationOptions: {header: null}
+//     },
+//     DetailWebtoon: {
+//         screen: DetailWebtoon,
+//         title: 'Detail Webtoon',
         
-    },
-    DetailEp: {
-        screen: DetailEp,
-        title: 'Detail Episode',
+//     },
+//     DetailEp: {
+//         screen: DetailEp,
+//         title: 'Detail Episode',
         
-    }, 
-     initialRouteName: 'ForYou',
-    });
+//     }, 
+//      initialRouteName: 'ForYou',
+//     });
 
-const EditProfileStack = createStackNavigator(
-  {
-    Profile: {
-      screen: Profile,
-      title: "Profile",
-      navigationOptions: {header: null},
-    },
-    EditProfile: {
-      screen: EditProfile,
-      title: "Edit Profile",
+// const EditProfileStack = createStackNavigator(
+//   {
+//     Profile: {
+//       screen: Profile,
+//       title: "Profile",
+//       navigationOptions: {header: null},
+//     },
+//     EditProfile: {
+//       screen: EditProfile,
+//       title: "Edit Profile",
       
-    }
-  }
-)
+//     }
+//   }
+// )
 
-const MyCreationStack = createStackNavigator(
-  {
-    Profile: {
-      screen: Profile,
-      title: "Profile",
-      navigationOptions: {header: null},
-    },
-    MyCreation: {
-      screen: MyCreation,
-      title: "My Creation",
-    },
-    CreateWebtoon: {
-      screen: CreateWebtoon,
-      title: "Create Webtoon"
-    },
-    CreateEpisode: {
-      screen: CreateEpisode,
-      title: "Create Episode"
-    }
-  }
-)
+// const MyCreationStack = createStackNavigator(
+//   {
+//     Profile: {
+//       screen: Profile,
+//       title: "Profile",
+//       navigationOptions: {header: null},
+//     },
+//     MyCreation: {
+//       screen: MyCreation,
+//       title: "My Creation",
+//     },
+//     CreateWebtoon: {
+//       screen: CreateWebtoon,
+//       title: "Create Webtoon"
+//     },
+//     CreateEpisode: {
+//       screen: CreateEpisode,
+//       title: "Create Episode"
+//     }
+//   }
+// )
 
-const ProfileStack = createSwitchNavigator(
-  {
-    EditProfileStack: EditProfileStack,
-    MyCreationStack: MyCreationStack
-  },
-  {
-    initialRouteName: "EditProfileStack",
-   }
-)
+// const ProfileStack = createSwitchNavigator(
+//   {
+//     EditProfileStack: EditProfileStack,
+//     MyCreationStack: MyCreationStack
+//   },
+//   {
+//     initialRouteName: "EditProfileStack",
+//    }
+// )
 
-const BottomTab = createBottomTabNavigator({
-    ForYou: ForYouStack ,
-    Favourite: {
-      screen: Favourite,
-      title: "Favourite",
-      navigationOptions: {header: null, },
-    },
-    Profile: ProfileStack
-  }, {
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({horizontal,tintColor }) => {
-        const { routeName } = navigation.state;
-        let iconName;
-        if (routeName === 'ForYou') {
-          iconName = `grid`;
-        } else if (routeName === 'Favourite') {
-          iconName = `star`;
-        } else if (routeName === 'Profile') {
-          iconName = `user`;}
-      return <Icon type="Entypo" name={iconName} size={25} style={{color: tintColor,}} />;
-      },
-    }),
-    tabBarOptions: {
-      activeTintColor: 'black',
-      inactiveTintColor: '#E1F7D5',
-      style:{
-      backgroundColor: '#22bb33',
-      paddingTop: 5,
+// const BottomTab = createBottomTabNavigator({
+//     ForYou: ForYouStack ,
+//     Favourite: {
+//       screen: Favourite,
+//       title: "Favourite",
+//       navigationOptions: {header: null, },
+//     },
+//     Profile: ProfileStack
+//   }, {
+//     defaultNavigationOptions: ({ navigation }) => ({
+//       tabBarIcon: ({horizontal,tintColor }) => {
+//         const { routeName } = navigation.state;
+//         let iconName;
+//         if (routeName === 'ForYou') {
+//           iconName = `grid`;
+//         } else if (routeName === 'Favourite') {
+//           iconName = `star`;
+//         } else if (routeName === 'Profile') {
+//           iconName = `user`;}
+//       return <Icon type="Entypo" name={iconName} size={25} style={{color: tintColor,}} />;
+//       },
+//     }),
+//     tabBarOptions: {
+//       activeTintColor: 'black',
+//       inactiveTintColor: '#E1F7D5',
+//       style:{
+//       backgroundColor: '#22bb33',
+//       paddingTop: 5,
       
-    }
-    },
+//     }
+//     },
     
-  }
-  )
+//   }
+//   )
     
  
-const Switch = createSwitchNavigator({
-  BottomTab: BottomTab, 
-  SignedOut: SignedOut
-  },
-  {
-   initialRouteName: "SignedOut",
-  });
+// const Switch = createSwitchNavigator({
+//   BottomTab: BottomTab, 
+//   SignedOut: SignedOut
+//   },
+//   {
+//    initialRouteName: "SignedOut",
+//   });
 
-export default createAppContainer(Switch);
+// export default createAppContainer(Switch);
 
-// export default MyCreation
+export default EditEpisode
 
 
