@@ -24,6 +24,9 @@ import Favourite from './screens/Favourite'
 import Profile from './screens/Profile'
 import EditProfile from './screens/EditProfile'
 import MyCreation from './screens/MyCreation'
+import CreateWebtoon from './screens/CreateWebtoon'
+import CreateEpisode from './screens/CreateEpisode'
+
 
 const SignedOut = createStackNavigator(
     {
@@ -83,7 +86,14 @@ const MyCreationStack = createStackNavigator(
     MyCreation: {
       screen: MyCreation,
       title: "My Creation",
-      
+    },
+    CreateWebtoon: {
+      screen: CreateWebtoon,
+      title: "Create Webtoon"
+    },
+    CreateEpisode: {
+      screen: CreateEpisode,
+      title: "Create Episode"
     }
   }
 )

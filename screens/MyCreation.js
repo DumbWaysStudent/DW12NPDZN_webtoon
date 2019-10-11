@@ -75,7 +75,7 @@ import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handl
                     style={{ backgroundColor: '#bb2124' }}
                     position="bottomRight"
                     >
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateWebtoon')}>
                     <Icon type="FontAwesome" name="plus" style={{fontSize:35, color: 'white'}} />
                 </TouchableOpacity>    
                 </Fab>
