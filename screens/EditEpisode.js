@@ -11,6 +11,7 @@ import {
     Title,
     Header,
     Form, 
+    Fab,
     Item, 
     Input, 
     Button, 
@@ -20,10 +21,10 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 export default class CreateEpisode extends Component {
 
-constructor(){
-    super();
+constructor(props){
+    super(props);
     this.state = {
-        name: "Ep. 4",
+        name: this.props.navigation.getParam('ep'),
         chapter: [ {
             ep: '1. cover.png',
            
@@ -38,7 +39,7 @@ constructor(){
 
 static navigationOptions = ({ navigation }) => {
     return {
-        title: "Create Webtoon",
+        title: "Edit Episode",
         headerStyle: {
             backgroundColor: '#32cd32',
             },
@@ -84,15 +85,17 @@ render() {
             </Row>
             </View>
         }/>                                  
-        
-        <Button block rounded  style={{alignSelf: 'center', marginTop: 15}} >
-         <Text style={{fontSize:17}} >+ Add Image</Text>
+       
+        <Button block rounded  style={{alignSelf: 'center', marginTop: 15}} 
+        >
+        <Text style={{fontSize:17}} >+ Add Image</Text>
         </Button>  
         <Button block danger rounded style={{alignSelf: 'center', marginTop: 15}} 
         onPress={() => this.props.navigation.navigate('EditWebtoon')}
         >
-         <Text style={{fontSize:17}} >DELETE EPISODE</Text>
-        </Button>
+        <Text style={{fontSize:17}} >DELETE EPISODE</Text>
+        </Button>   
+       
         </Content>
         </Container>
     );

@@ -86,13 +86,17 @@ import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handl
                 keyExtractor = {item => item.id}
                 renderItem = {({item}) => 
                 <View style={styles.AllCont} key={item.image}>
-                    <Row>
-                    <Image style={styles.AllImg} source={{ uri: item.image }} /> 
-                    <View style={styles.AllDes}>
-                        <Text style={styles.AllTitle}>{item.title}</Text>
-                        <Text style={styles.AllStar}>{item.eps}</Text>
-                    </View>
-                    </Row>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('EditWebtoon',{
+                      title: item.title
+                    })}>
+                      <Row>
+                      <Image style={styles.AllImg} source={{ uri: item.image }} /> 
+                      <View style={styles.AllDes}>
+                          <Text style={styles.AllTitle}>{item.title}</Text>
+                          <Text style={styles.AllStar}>{item.eps}</Text>
+                      </View>
+                      </Row>  
+                    </TouchableOpacity>        
                 </View>
                 }/>  
               </View>

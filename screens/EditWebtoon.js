@@ -20,10 +20,10 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 export default class CreateWebtoon extends Component {
 
-constructor(){
-    super();
+constructor(props){
+    super(props);
     this.state = {
-        title: "Tokyo Ghoul",
+        title: this.props.navigation.getParam('title'),
         chapter: [{
             ep: 'Ep.4',
             date:'07 October 2019',
@@ -80,7 +80,10 @@ render() {
             keyExtractor = {item => item.id}
             renderItem = {({item}) => 
             <View style={styles.AllCont} key={item.image}>
-            <Row>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('EditEpisode',{
+                ep: item.ep
+            })}>
+              <Row>
                 <Image 
                 style={styles.AllImg} 
                 source={{ uri: item.image }} 
@@ -89,7 +92,8 @@ render() {
                 <Text style={styles.AllEp}>{item.ep}</Text>
                 <Text style={styles.AllDate}>{item.date}</Text>
                 </View>
-            </Row>
+              </Row>      
+            </TouchableOpacity>  
             </View>
         }/>                                  
         

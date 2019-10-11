@@ -37,7 +37,7 @@ constructor(){
 
 static navigationOptions = ({ navigation }) => {
     return {
-        title: "Create Webtoon",
+        title: "Create Episode",
         headerStyle: {
             backgroundColor: '#32cd32',
             },
