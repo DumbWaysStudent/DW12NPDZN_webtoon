@@ -17,35 +17,49 @@ import {
 import { StyleSheet, ScrollView, Dimensions, Image} from 'react-native'
 import Carousel from 'react-native-banner-carousel';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import axios from 'axios'
+
+
 
   export default class ForYou extends Component{
     BannerWidth = Dimensions.get('window').width;
     constructor(){
         super();
         this.state = {
-          banners: [{
-            title: 'Tokyo Ghoul',
-            image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5319-SeriesHeaders_TKG_2000x800_REV.jpg'
-        }, {
-            title: 'Astra Lost in Space',
-            image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5806-SeriesHeaders_Astra_2000x800.jpg'
-        }, {
-            title: 'Bakuman',
-            image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5487-Tier04_SeriesHeaders_BAK_v2_2000x800.jpg'
-        }, {
-            title: 'Blue Exorcist',
-            image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5392-SeriesHeader_Tier02_BEX_2000x800.jpg'
-        }, {
-            title: 'The Promised Neverland',
-            image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5868-SeriesHeaders_PromisedNeverland_2000x800.jpg'
-        }, {
-            title: 'Assassination Classroom',
-            image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5342-SeriesHeaders_Tier01_ASC_v2_2000x800.jpg'
-        }, 
-        ]
-          
+          sketches: [],
+          favorites: []
         }}
     
+    
+    componentDidMount(){
+      this.showSketches()
+      this.showFavorite()
+    }
+
+    showSketches = () => {
+      axios({
+        method: 'GET',
+        url: 'http://192.168.1.82:5001/api/v1/sketches'
+      }).then(res => {
+        const sketches = res.data
+        console.log(sketches)
+        this.setState({sketches})
+      })
+
+    }
+
+    showFavorite = () => {
+      axios({
+        method: 'GET',
+        url: 'http://192.168.1.82:5001/api/v1/sketches?is_favorite=true'
+      }).then(res => {
+        const favorites = res.data
+        console.log(favorites)
+        this.setState({favorites})
+      })
+
+    }
+
     render(){    
       return(
         <Container>
@@ -65,12 +79,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
             loop  
             pageSize={this.BannerWidth}      
           >
-            {this.state.banners.map((image)=> (
+            {this.state.sketches.map((image)=> (
             <View style={styles.Carousel} key={image.image}>
               <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('DetailWebtoon', {
                   detail: image.image,
-                  title: image.title
+                  title: image.title,
+                  skId: image.id
                 })}
                 >
                 <Image style={styles.CarouselImg} source={{ uri: image.image }} /> 
@@ -82,13 +97,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
         
         <View style={styles.ScrollView}>
           <Text style={styles.Fav}>Favourite</Text>
-          <ScrollView horizontal={true}>
-            {this.state.banners.map((image)=> (   
+          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+            {this.state.favorites.map((image)=> (   
             <View style={styles.ScrollViewCon} key={image.image}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('DetailWebtoon', {
                   detail: image.image,
-                  title: image.title
+                  title: image.title,
+                  skId: image.id
                 })}
                 >
                 <Image style={styles.ScrollViewImg} source={{ uri: image.image }} />
@@ -99,13 +115,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
         </View>
         <View style={styles.AllCon}>
             <Text style={styles.All}>All</Text>
-            {this.state.banners.map((image)=> (
+            {this.state.sketches.map((image)=> (
             <View style={styles.AllCont} key={image.image}>  
                 <Row>
                 <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('DetailWebtoon', {
                     detail: image.image,
-                    title: image.title
+                    title: image.title,
+                    skId: image.id
                   })}
                     >
                   <Image style={styles.AllImg} source={{ uri: image.image }} />
@@ -130,7 +147,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
   const styles = StyleSheet.create({
     Header: {
-      backgroundColor: "limegreen"},
+      backgroundColor: '#22bb33'},
     HeaderIcon: {
       paddingRight: 17, 
       fontSize:30},

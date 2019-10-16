@@ -135,21 +135,21 @@ const BottomTab = createBottomTabNavigator({
         const { routeName } = navigation.state;
         let iconName;
         if (routeName === 'ForYou') {
-          iconName = `grid`;
+          iconName = `microsoft`;
         } else if (routeName === 'Favourite') {
           iconName = `star`;
         } else if (routeName === 'Profile') {
           iconName = `user`;}
-      return <Icon type="Entypo" name={iconName} size={25} style={{color: tintColor,}} />;
+      return <Icon type="FontAwesome5" name={iconName} size={25} style={{color: tintColor,}} />;
       },
     }),
     tabBarOptions: {
       activeTintColor: 'black',
       inactiveTintColor: '#E1F7D5',
+      showLabel:false,
+      keyboardHidesTabBar: true,
       style:{
       backgroundColor: '#22bb33',
-      paddingTop: 5,
-      
     }
     },
     

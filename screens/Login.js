@@ -12,7 +12,7 @@ import {
   } 
   from 'native-base';
 import {
-  StyleSheet,
+  StyleSheet, Image
 } from 'react-native'
 
   export default class Login extends Component{
@@ -77,6 +77,7 @@ import {
         <Content padder >
           
             <View style={styles.title}>
+              <Image style={styles.logo} source={require('./logo.png')}/>
               <Text style={styles.login}>Log In</Text>
               <Text>Login with your account WEBTOON</Text>
             </View>
@@ -118,19 +119,24 @@ import {
 const styles = StyleSheet.create({
   title:{
     alignItems: "center", 
-    marginTop:130, 
-    marginBottom:50, 
+    marginTop:50, 
+    marginBottom:20, 
     fontFamily: 'Austin-Light'
   },
+  logo:{
+    width: 200,
+    height: 200
+  },
   login: {
-    fontSize: 50, 
-    marginBottom:10, 
+    fontSize: 40, 
+   
   },
   container: {
     paddingHorizontal: 20
   },
   label: {
-    padding: 10
+    padding: 10,
+    fontWeight: 'bold'
   },
   button:{
     marginTop: 25,

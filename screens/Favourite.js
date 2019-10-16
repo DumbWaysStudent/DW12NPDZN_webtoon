@@ -83,7 +83,7 @@ import { StyleSheet, ScrollView, Dimensions, FlatList, Image} from 'react-native
 
   const styles = StyleSheet.create({
     Header: {
-      backgroundColor: "limegreen"},
+      backgroundColor: '#22bb33'},
     HeaderIcon: {
       paddingRight: 17, 
       fontSize:30},

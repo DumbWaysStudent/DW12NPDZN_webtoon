@@ -63,7 +63,7 @@ render() {
         <TextInput
          placeholder='Name'
          value= {this.state.name}
-        style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, textAlign:'center'}}
+        style= {{borderWidth: 2, borderColor: 'black', fontSize:20, borderRadius: 100, textAlign:'center'}}
         />
         <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 15}}>Add Images</Text>
         <FlatList

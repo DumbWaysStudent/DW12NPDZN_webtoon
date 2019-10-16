@@ -10,38 +10,15 @@ import {
   from 'native-base';
 import { StyleSheet, FlatList, Dimensions, Share, Image} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import axios from 'axios'
 
   export default class DetailWebtoon extends Component{
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
-          details: [{
-            ep: 'Ep.6',
-            date:'09 October 2019',
-            image: 'https://dw9to29mmj727.cloudfront.net/products/1421585278.jpg'
-        }, {
-            ep: 'Ep.5',
-            date:'08 October 2019',
-            image: 'https://dw9to29mmj727.cloudfront.net/products/142156954X.jpg'
-        }, {
-            ep: 'Ep.4',
-            date:'07 October 2019',
-            image: 'https://dw9to29mmj727.cloudfront.net/products/1421569205.jpg'
-        }, {
-            ep: 'Ep.3',
-            date:'06 October 2019',
-            image: 'https://dw9to29mmj727.cloudfront.net/products/1421564610.jpg'
-        }, {
-            ep: 'Ep.2',
-            date:'05 October 2019',
-            image: 'https://dw9to29mmj727.cloudfront.net/products/1421585650.jpg'
-        }, {
-            ep: 'Ep.1',
-            date:'04 October 2019',
-            image: 'https://dw9to29mmj727.cloudfront.net/products/1421585642.jpg'
-        }],
+          details: [],
+          id: props.navigation.getParam('skId')
          }
     }
 
@@ -62,6 +39,24 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
             };
     }
 
+    componentDidMount(){
+      this.showDetails()
+    }
+
+    showDetails = () => {
+      axios({
+        method: 'GET',
+        url: `http://192.168.1.82:5001/api/v1/sketch/${this.state.id}/chapters`
+      }).then(res => {
+        const details = res.data
+        console.log(details)
+        this.setState({details})
+      })
+
+    }
+
+
+
     render(){    
       return(
         <Container>
@@ -81,7 +76,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
               <View style={styles.AllCont} key={item.image}>
                 <Row>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('DetailEp', {
-                    title: item.ep
+                    title: item.chapter_title,
+                    chId: item.id,
+                    skId: item.sketchId.id
                   })}
                 >
                   <Image 
@@ -90,8 +87,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
                   />
                 </TouchableOpacity>
                   <View style={styles.AllDes}>
-                    <Text style={styles.AllEp}>{item.ep}</Text>
-                    <Text style={styles.AllDate}>{item.date}</Text>
+                    <Text style={styles.AllEp}>{item.chapter_title}</Text>
+                    <Text style={styles.AllDate}>{item.sketchId.genre}</Text>
                   </View>
                 </Row>
               </View>

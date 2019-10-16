@@ -45,7 +45,7 @@ constructor(){
 
 static navigationOptions = ({ navigation }) => {
     return {
-        title: "Create Webtoon",
+        title: "Create Sketchtoon",
         headerStyle: {
             backgroundColor: '#32cd32',
             },
@@ -70,7 +70,7 @@ render() {
          placeholder='Title'
         //  onChangeText={username => this.setState({ username })}
         //  value = {this.state.username}
-        style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, textAlign:'center'}}
+        style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, fontSize:20, textAlign:'center'}}
         />
         <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 15}}>Episode</Text>
         <FlatList

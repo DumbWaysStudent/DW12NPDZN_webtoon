@@ -57,3 +57,7 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# api services
+apiservices/node_modules
+apiservices/package-lock.json

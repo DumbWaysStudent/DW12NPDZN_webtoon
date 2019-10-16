@@ -17,7 +17,7 @@ import {
     Icon,  
     } 
     from 'native-base';
-import { TextInput } from 'react-native-gesture-handler';
+import { TextInput, ScrollView } from 'react-native-gesture-handler';
 export default class CreateWebtoon extends Component {
 
 constructor(props){
@@ -46,7 +46,7 @@ constructor(props){
 
 static navigationOptions = ({ navigation }) => {
     return {
-        title: "Edit Webtoon",
+        title: "Edit Sketchtoon",
         headerStyle: {
             backgroundColor: '#32cd32',
             },
@@ -70,12 +70,10 @@ render() {
         <TextInput
          placeholder= 'Title'
          value= {this.state.title}
-        //  onChangeText={username => this.setState({ username })}
-        //  value = {this.state.username}
-        style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, textAlign:'center'}}
+        style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, fontSize:20, textAlign:'center'}}
         />
         <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 15}}>Episode</Text>
-        <FlatList
+          <FlatList
             data = {this.state.chapter}
             keyExtractor = {item => item.id}
             renderItem = {({item}) => 
@@ -95,7 +93,8 @@ render() {
               </Row>      
             </TouchableOpacity>  
             </View>
-        }/>                                  
+        }/>
+                                          
         
         <Button block rounded style={{alignSelf: 'center', marginTop: 15}} 
         onPress={() => this.props.navigation.navigate('CreateEpisode')}
@@ -105,7 +104,7 @@ render() {
         <Button block danger rounded style={{alignSelf: 'center', marginTop: 15}} 
         onPress={() => this.props.navigation.navigate('MyCreation')}
         >
-         <Text style={{fontSize:17}} >DELETE WEBTOON</Text>
+         <Text style={{fontSize:17}} >DELETE SKETCHTOON</Text>
         </Button>
 
         </Content>

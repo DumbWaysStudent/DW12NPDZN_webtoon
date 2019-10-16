@@ -96,9 +96,7 @@ const styles = StyleSheet.create({
         fontSize: 24
       },
     ImgCont: {
-        borderBottomWidth: 1, 
-        borderColor: "black", 
-        paddingVertical: 30},
+        paddingVertical: 50},
     Img: {
         borderWidth: 2, 
         borderColor: "black", 
@@ -113,6 +111,7 @@ const styles = StyleSheet.create({
         fontWeight:'bold'},
     LogOut: {
         padding:15, 
+        borderTopWidth: 0.5,
         borderBottomWidth: 1, 
         borderColor: "black", 
         fontSize: 20},
@@ -122,6 +121,7 @@ const styles = StyleSheet.create({
         flexDirection: "row", 
         justifyContent: "space-between", 
         padding:15, 
-        borderBottomWidth: 1, 
+        borderTopWidth: 1,
+        borderBottomWidth: 0.5, 
         borderColor: "black"}
 })

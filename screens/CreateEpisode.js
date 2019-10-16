@@ -60,7 +60,7 @@ render() {
         <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 7}}>Name</Text>
         <TextInput
          placeholder='Name'
-        style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, textAlign:'center'}}
+        style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, fontSize:20, textAlign:'center'}}
         />
         <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 15}}>Add Images</Text>
         <FlatList

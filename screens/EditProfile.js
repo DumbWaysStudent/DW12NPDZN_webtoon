@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 30,
+    paddingTop: 50,
     alignItems: 'center',
   },
   avatarContainer: {
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     color: 'black',
     borderRadius: 7,
-    marginTop: 12,
+    marginTop: 5,
     marginHorizontal: 2
   },
 });
