@@ -34,31 +34,7 @@ import axios from 'axios'
             sketches: [],
             token: '',
             id: null,
-            MyCreation: [{
-                title: 'Tokyo Ghoul',
-                eps:'10 episode(s)',
-                image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5319-SeriesHeaders_TKG_2000x800_REV.jpg'
-            }, {
-                title: 'Astra Lost in Space',
-                eps:'100 episode(s)',
-                image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5806-SeriesHeaders_Astra_2000x800.jpg'
-            }, {
-                title: 'Bakuman',
-                eps:'50 episode(s)',
-                image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5487-Tier04_SeriesHeaders_BAK_v2_2000x800.jpg'
-            }, {
-                title: 'Blue Exorcist',
-                eps:'20 episode(s)',
-                image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5392-SeriesHeader_Tier02_BEX_2000x800.jpg'
-            }, {
-                title: 'The Promised Neverland',
-                eps:'40 episode(s)',
-                image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5868-SeriesHeaders_PromisedNeverland_2000x800.jpg'
-            }, {
-                title: 'Assassination Classroom',
-                eps:'70 episode(s)',
-                image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5342-SeriesHeaders_Tier01_ASC_v2_2000x800.jpg'
-            }],  
+              
         }}
 
     async componentDidMount(){
@@ -66,6 +42,10 @@ import axios from 'axios'
       await this.getId()
       this.showSketches()
     }
+
+    // componentDidUpdate(){
+    //   this.showSketches()
+    // }
 
     async getToken () {
       await AsyncStorage.getItem('token').then(key=>
@@ -132,7 +112,10 @@ import axios from 'axios'
                 renderItem = {({item}) => 
                 <View style={styles.AllCont} key={item.image}>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('EditWebtoon',{
-                      title: item.title
+                      title: item.title,
+                      skId: item.id,
+                      genre: item.genre,
+                      image: item.image
                     })}>
                       <Row>
                       <Image style={styles.AllImg} source={{ uri: item.image }} /> 
