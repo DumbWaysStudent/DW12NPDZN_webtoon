@@ -21,6 +21,9 @@ import {
   from 'native-base';
 import { StyleSheet, ScrollView, Dimensions, FlatList, Image} from 'react-native'
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage'
+import axios from 'axios'
+
 
   export default class MyCreation extends Component{
 
@@ -28,6 +31,9 @@ import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handl
         super();
         this.state = {
             active: false,
+            sketches: [],
+            token: '',
+            id: null,
             MyCreation: [{
                 title: 'Tokyo Ghoul',
                 eps:'10 episode(s)',
@@ -54,6 +60,45 @@ import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handl
                 image: 'https://dw9to29mmj727.cloudfront.net/promo/2016/5342-SeriesHeaders_Tier01_ASC_v2_2000x800.jpg'
             }],  
         }}
+
+    async componentDidMount(){
+      await this.getToken()
+      await this.getId()
+      this.showSketches()
+    }
+
+    async getToken () {
+      await AsyncStorage.getItem('token').then(key=>
+        this.setState({
+          token: key
+        }))
+    }
+
+    async getId () {
+      await AsyncStorage.getItem('id').then(key=>
+        this.setState({
+          id: JSON.parse(key)
+        }))
+    }
+
+   
+    showSketches = () => {
+      axios({
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${this.state.token}`
+        },
+        url: `http://192.168.1.82:5001/api/v1/user/${this.state.id}/sketches`
+      }).then(res => {
+        const sketches = res.data
+        
+        console.log(sketches)
+        this.setState({sketches})
+      })
+
+    }
+
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -82,7 +127,7 @@ import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handl
             <Content style={styles.Content}>
               <View style={styles.AllCon}>    
                 <FlatList
-                data = {this.state.MyCreation}
+                data = {this.state.sketches}
                 keyExtractor = {item => item.id}
                 renderItem = {({item}) => 
                 <View style={styles.AllCont} key={item.image}>
@@ -93,7 +138,7 @@ import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handl
                       <Image style={styles.AllImg} source={{ uri: item.image }} /> 
                       <View style={styles.AllDes}>
                           <Text style={styles.AllTitle}>{item.title}</Text>
-                          <Text style={styles.AllStar}>{item.eps}</Text>
+                          <Text style={styles.AllStar}>{item.genre}</Text>
                       </View>
                       </Row>  
                     </TouchableOpacity>        

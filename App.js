@@ -28,8 +28,8 @@ import CreateWebtoon from './screens/CreateWebtoon'
 import CreateEpisode from './screens/CreateEpisode'
 import EditWebtoon from './screens/EditWebtoon'
 import EditEpisode from './screens/EditEpisode'
-
-
+import SearchWebtoon from './screens/SearchWebtoon'
+import SearchFavorite from './screens/SearchFavourite'
 
 const SignedOut = createStackNavigator(
     {
@@ -54,12 +54,15 @@ const ForYouStack = createStackNavigator(
     DetailWebtoon: {
         screen: DetailWebtoon,
         title: 'Detail Webtoon',
-        
     },
     DetailEp: {
         screen: DetailEp,
-        title: 'Detail Episode',
-        
+        title: 'Detail Episode', 
+    }, 
+    SearchWebtoon: {
+        screen: SearchWebtoon,
+        title: 'Search Webtoon',
+        // navigationOptions: {header: null} 
     }, 
      initialRouteName: 'ForYou',
     });
@@ -110,6 +113,30 @@ const MyCreationStack = createStackNavigator(
   }
 )
 
+const FavoriteStack = createStackNavigator({
+  Favourite: {
+      screen: Favourite,
+      title: "Favourite",
+      navigationOptions: {header: null, },
+    },
+  DetailWebtoon: {
+      screen: DetailWebtoon,
+      title: 'Detail Webtoon',
+  },
+  DetailEp: {
+      screen: DetailEp,
+      title: 'Detail Episode', 
+  }, 
+  SearchFavorite: {
+    screen: SearchFavorite,
+    title: 'Search Favorite',
+    // navigationOptions: {header: null} 
+  }, 
+  },
+  {
+    initialRouteName: "Favourite",
+  }
+  )
 
 const ProfileStack = createSwitchNavigator(
   {
@@ -123,11 +150,7 @@ const ProfileStack = createSwitchNavigator(
 
 const BottomTab = createBottomTabNavigator({
     ForYou: ForYouStack ,
-    Favourite: {
-      screen: Favourite,
-      title: "Favourite",
-      navigationOptions: {header: null, },
-    },
+    Favourite: FavoriteStack,
     Profile: ProfileStack
   }, {
     defaultNavigationOptions: ({ navigation }) => ({

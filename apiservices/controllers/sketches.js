@@ -1,24 +1,40 @@
 const models = require('../models')
+const Sequelize = require('sequelize')
 const Sketch = models.sketch
 const Chapter = models.chapter
 const Page = models.page
 const User = models.user
+const Op = Sequelize.Op
+
 
 exports.index = (req, res) => {
 
   if(req.query.is_favorite){
     Sketch.findAll({
       where: {isFavorite: true},
-    }).then(sketchs => res.send(sketchs))
+    }).then(sketches => res.send(sketches))
   } 
   else if(req.query.title){
     Sketch.findAll({
-      where: {title: req.query.title},
-    }).then(sketchs => res.send(sketchs)) 
+      where: {title: {[Op.like]: `%${req.query.title}%`}},
+    }).then(sketches => res.send(sketches)) 
   }
   else {
     Sketch.findAll().then(sketch=>res.send(sketch))
   }
+}
+
+exports.favoriteIndex = (req, res) => {
+  if (req.query.title){
+    Sketch.findAll({
+      where: {isFavorite: true, title: {[Op.like]: `%${req.query.title}%`}},
+    }).then(sketches => res.send(sketches)) 
+  } else {
+    Sketch.findAll({
+    where: {isFavorite: true},
+  }).then(sketches => res.send(sketches))
+  }
+ 
 }
 
 exports.show = (req, res) => {
@@ -35,12 +51,6 @@ exports.show = (req, res) => {
   
 }
 
-// exports.chapterIndex = (req, res) => {
-//   const id = req.params.chId
-  
-//   Sketch.findAll({where: {id}, include: ['chapterId'] }).then(chapter=>res.send(chapter))
-  
-// }
 
 exports.chapterShow = (req, res) => {
   

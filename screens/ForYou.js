@@ -17,28 +17,43 @@ import {
 import { StyleSheet, ScrollView, Dimensions, Image} from 'react-native'
 import Carousel from 'react-native-banner-carousel';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
-
 
 
   export default class ForYou extends Component{
     BannerWidth = Dimensions.get('window').width;
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
+          token: '',
           sketches: [],
-          favorites: []
+          favorites: [],
+          keyword: '',
+          id: null
         }}
     
-    
-    componentDidMount(){
+
+    async componentDidMount(){
+      await this.getToken()
       this.showSketches()
       this.showFavorite()
+    }
+
+    async getToken () {
+      await AsyncStorage.getItem('token').then(key=>
+        this.setState({
+          token: key
+        }))
     }
 
     showSketches = () => {
       axios({
         method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${this.state.token}`
+        },
         url: 'http://192.168.1.82:5001/api/v1/sketches'
       }).then(res => {
         const sketches = res.data
@@ -51,22 +66,30 @@ import axios from 'axios'
     showFavorite = () => {
       axios({
         method: 'GET',
-        url: 'http://192.168.1.82:5001/api/v1/sketches?is_favorite=true'
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${this.state.token}`
+        },
+        url: 'http://192.168.1.82:5001/api/v1/sketches/favorites'
       }).then(res => {
         const favorites = res.data
         console.log(favorites)
         this.setState({favorites})
       })
 
-    }
+    }   
 
     render(){    
       return(
         <Container>
          <Header searchBar rounded style={styles.Header}>
           <Item rounded>
-            <Input placeholder="Search" />
-            <Icon name="search" style={styles.HeaderIcon}/>
+            <Input placeholder="Search" onChangeText={keyword =>this.setState({keyword})}/>
+            <Icon name="search" style={styles.HeaderIcon} 
+            onPress={() => this.props.navigation.navigate('SearchWebtoon', {     
+              keyword: this.state.keyword,
+            })}
+            />
           </Item>
         </Header>
 
@@ -83,6 +106,7 @@ import axios from 'axios'
             <View style={styles.Carousel} key={image.image}>
               <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('DetailWebtoon', {
+                  
                   detail: image.image,
                   title: image.title,
                   skId: image.id
@@ -102,6 +126,7 @@ import axios from 'axios'
             <View style={styles.ScrollViewCon} key={image.image}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('DetailWebtoon', {
+                 
                   detail: image.image,
                   title: image.title,
                   skId: image.id
@@ -120,6 +145,7 @@ import axios from 'axios'
                 <Row>
                 <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('DetailWebtoon', {
+                   
                     detail: image.image,
                     title: image.title,
                     skId: image.id
@@ -130,7 +156,7 @@ import axios from 'axios'
                   <View style={styles.AllDes}>
                     <Text style={styles.AllTitle}>{image.title}</Text>
                      <Button warning small style={styles.AllButton}>
-                        <Text style={styles.AllFav}>+ Favourite</Text>
+                        <Text style={styles.AllFav}>+ Favorite</Text>
                      </Button>        
                   </View>
                 </Row>  

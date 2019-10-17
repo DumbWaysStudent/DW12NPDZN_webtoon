@@ -19,11 +19,13 @@ app.group("/api/v1", (router) => {
 	router.post('/register', AuthController.register)
 	router.post('/login', AuthController.login)
 
-	router.get('/sketches', SketchController.index)
-	router.get('/sketch/:skId/chapters', SketchController.show)
+	router.get('/sketches', authenticated, SketchController.index)
 	
-	// router.get('/sketch/:chId/chapters', SketchController.chapterIndex)
-	router.get('/sketch/:skId/chapter/:chId', SketchController.chapterShow)
+	router.get('/sketches/favorites', authenticated, SketchController.favoriteIndex)	
+	
+	router.get('/sketch/:skId/chapters', authenticated, SketchController.show)
+	
+	router.get('/sketch/:skId/chapter/:chId', authenticated, SketchController.chapterShow)
 	
 	router.get('/user/:id/sketches', authenticated, SketchController.userIndex)
 	router.post('/user/:id/sketch', authenticated, SketchController.userStore)

@@ -11,9 +11,10 @@ import {
   Icon,  
   } 
   from 'native-base';
-import {
-  StyleSheet, Image
-} from 'react-native'
+import { StyleSheet, Image} from 'react-native'
+import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage'
+
 
   export default class Login extends Component{
 
@@ -25,8 +26,60 @@ import {
         isDisabled: true,
         username: "",
         password: null,
+        token: "",
+        id: null
         
       }}
+
+
+    userLogin = () => {
+      axios({
+        method: 'POST',
+        url: `http://192.168.1.82:5001/api/v1/login`,
+        data: {
+          email: this.state.username,
+          password: this.state.password
+        }
+      }).then(res => {
+
+        this.setState({
+          token: res.data.token,
+          id: res.data.user.id
+        })
+
+        
+
+        if (typeof res.data.token !== 'undefined') {
+          AsyncStorage.setItem('token', this.state.token)
+          AsyncStorage.setItem('id', JSON.stringify(this.state.id))
+          this.props.navigation.navigate('ForYou')
+        } else {
+          alert('Login failed!')
+        }
+      })
+    }
+
+    userRegister = () => {
+      axios({
+        method: 'POST',
+        url: `http://192.168.1.82:5001/api/v1/register`,
+        data: {
+          email: this.state.username,
+          password: this.state.password
+        }
+      }).then(res => {
+
+        this.setState({
+          token: res.data.token,
+          id: res.data.user.id
+        })
+
+        AsyncStorage.setItem('token', this.state.token)
+        AsyncStorage.setItem('id', JSON.stringify(this.state.id))
+        this.props.navigation.navigate('ForYou')
+
+      })
+    }
     
     changeIcon = () => {
       this.setState(prevState => ({
@@ -52,25 +105,25 @@ import {
         })
       }
 
-      passValidation = (password) => {
-        const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-        if (password != null && reg.test(this.state.username) == true){
-          this.setState({
-            password,
-            isDisabled: false,
-          })
-        } else {
-          this.setState({
-            password,
-            isDisabled: true
-        })}
+    passValidation = (password) => {
+      const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+      if (password != null && reg.test(this.state.username) == true){
         this.setState({
-          password
-          })
-        }
-  
-    render(){
-      
+          password,
+          isDisabled: false,
+        })
+      } else {
+        this.setState({
+          password,
+          isDisabled: true
+      })}
+      this.setState({
+        password
+        })
+      }
+
+
+    render(){    
       return(
         <Container>
         
@@ -104,9 +157,15 @@ import {
               </Form>
               <Button 
               success disabled = {this.state.isDisabled} rounded block style={styles.button}
-              onPress={() => this.props.navigation.navigate('ForYou')}
+              onPress={() => this.userLogin() }
               >
-                <Text >Log In</Text>
+                <Text >SIGN IN</Text>
+              </Button>
+              <Button 
+              primary disabled = {this.state.isDisabled} rounded block style={styles.button}
+              onPress={() => this.userRegister() }
+              >
+                <Text >SIGN UP</Text>
               </Button>
             </View>
 
@@ -119,8 +178,8 @@ import {
 const styles = StyleSheet.create({
   title:{
     alignItems: "center", 
-    marginTop:50, 
-    marginBottom:20, 
+    marginTop:45, 
+    marginBottom:10, 
     fontFamily: 'Austin-Light'
   },
   logo:{
@@ -128,17 +187,17 @@ const styles = StyleSheet.create({
     height: 200
   },
   login: {
-    fontSize: 40, 
+    fontSize: 35, 
    
   },
   container: {
     paddingHorizontal: 20
   },
   label: {
-    padding: 10,
+    padding: 5,
     fontWeight: 'bold'
   },
   button:{
-    marginTop: 25,
+    marginTop: 20,
   }
 })

@@ -11,6 +11,7 @@ import {
 import { StyleSheet, FlatList, Dimensions, Share, Image} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage'
 
 
   export default class DetailEp extends Component{
@@ -18,6 +19,7 @@ import axios from 'axios'
     constructor(props){
         super(props);
         this.state = {
+          token: '',
           skId: props.navigation.getParam('skId'),
           chId: props.navigation.getParam('chId'),
           chapters: [],
@@ -25,13 +27,25 @@ import axios from 'axios'
           }
         }
 
-    componentDidMount(){
+    async componentDidMount(){
+      await this.getToken()
       this.showDetails()
+    }
+
+    async getToken () {
+      await AsyncStorage.getItem('token').then(key=>
+        this.setState({
+          token: key
+        }))
     }
 
     showDetails = () => {
       axios({
         method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${this.state.token}`
+        },
         url: `http://192.168.1.82:5001/api/v1/sketch/${this.state.skId}/chapter/${this.state.chId}`
       }).then(res => {
         const chapters = res.data

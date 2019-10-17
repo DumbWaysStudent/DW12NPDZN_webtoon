@@ -11,12 +11,14 @@ import {
 import { StyleSheet, FlatList, Dimensions, Share, Image} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage'
 
   export default class DetailWebtoon extends Component{
 
     constructor(props){
         super(props);
         this.state = {
+          token: '',
           details: [],
           id: props.navigation.getParam('skId')
          }
@@ -39,13 +41,25 @@ import axios from 'axios'
             };
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+      await this.getToken()
       this.showDetails()
+    }
+
+    async getToken () {
+      await AsyncStorage.getItem('token').then(key=>
+        this.setState({
+          token: key
+        }))
     }
 
     showDetails = () => {
       axios({
         method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${this.state.token}`
+        },
         url: `http://192.168.1.82:5001/api/v1/sketch/${this.state.id}/chapters`
       }).then(res => {
         const details = res.data
@@ -54,8 +68,6 @@ import axios from 'axios'
       })
 
     }
-
-
 
     render(){    
       return(
@@ -76,6 +88,7 @@ import axios from 'axios'
               <View style={styles.AllCont} key={item.image}>
                 <Row>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('DetailEp', {
+                    
                     title: item.chapter_title,
                     chId: item.id,
                     skId: item.sketchId.id
