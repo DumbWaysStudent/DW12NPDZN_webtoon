@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Image,TouchableOpacity } from 'react-native';
+import { View, StyleSheet, PixelRatio, FlatList, Image,TouchableOpacity } from 'react-native';
 import {
     Container, 
     Content, 
@@ -12,6 +12,8 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
+import ImagePicker from 'react-native-image-picker';
+import config from '../../config-env'
 
 export default class CreateEpisode extends Component {
 
@@ -23,16 +25,18 @@ export default class CreateEpisode extends Component {
         image: '',
         ch_title: '',
         token: '',
+        avatarSource: null,
         chapter: [ {
             ep: '1. cover.png',
           
             image: 'https://dw9to29mmj727.cloudfront.net/products/1421585650.jpg'
-        }, {
+          }, {
             ep: '2. introduction.png',
             
             image: 'https://dw9to29mmj727.cloudfront.net/products/1421585642.jpg'
-        }],
-        }
+          }],
+          }
+        this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
       }
 
   async componentDidMount(){
@@ -80,7 +84,7 @@ export default class CreateEpisode extends Component {
         'content-type': 'application/json',
         'authorization': `Bearer ${this.state.token}`
       },
-      url: `http://192.168.1.82:5001/api/v1/user/${this.state.id}/sketch/${this.state.skId}/chapter`,
+      url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter`,
       data: {
         chapter_title: this.state.ch_title,
         image: this.state.image,
@@ -89,6 +93,35 @@ export default class CreateEpisode extends Component {
     }).then(res => {
       this.props.navigation.navigate('MyCreation')
     })
+  }
+
+  selectPhotoTapped() {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true,
+      },
+    };
+  
+  ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        let source = {uri: response.uri};
+
+        this.setState({
+          avatarSource: source,    
+        });    
+      }
+    });
   }
 
 
@@ -102,9 +135,25 @@ export default class CreateEpisode extends Component {
         onChangeText={ch_title => this.setState({ ch_title })}
         style= {{borderWidth: 2, borderColor: 'black', borderRadius: 100, fontSize:20, textAlign:'center'}}
         />
-        <Text style={{fontSize: 20,fontWeight: 'bold', marginVertical: 15}}>Add Images</Text>
+        <Text style={{fontSize: 20,fontWeight: 'bold', marginBottom: 7, marginTop: 7}}>Add Cover Page</Text>
+        <View style={styles.BannerContainer}>
+          <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+            <View
+                style={[styles.avatar, styles.avatarContainer]}>
+                {this.state.avatarSource === null ? (
+                <Image style={styles.avatar} source={require('./blank.jpg')} />
+                ) : (
+                <Image style={styles.avatar} source={this.state.avatarSource} />
+                )}
+                
+            </View>
+          </TouchableOpacity>
+        </View>
+
+
+        <Text style={{fontSize: 20,fontWeight: 'bold', marginBottom: 7, marginTop: 7}}>Add Images</Text>
         <FlatList
-            data = {this.state.chapter}
+            data = {this.state.chapters}
             keyExtractor = {item => item.id}
             renderItem = {({item}) => 
             <View style={styles.AllCont} key={item.image}>
@@ -162,7 +211,19 @@ const styles = StyleSheet.create({
     AllButton: {
       justifyContent: 'center',
       width:110, 
-      backgroundColor: '#bb2124'
-      
-    },
+      backgroundColor: '#bb2124'},
+    BannerContainer: {
+      flex: 1,
+      alignItems: 'center',},
+    avatarContainer: {
+      borderColor: '#9B9B9B',
+      borderWidth: 1 / PixelRatio.get(),
+      justifyContent: 'center',
+      alignItems: 'center',},
+    avatar: {
+      borderColor: 'black',
+      borderWidth: 2,
+      width: 150,
+      height: 150,},
+    
 })

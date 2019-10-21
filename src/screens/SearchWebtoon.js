@@ -17,20 +17,21 @@ import {
 import { StyleSheet, TouchableOpacity, ScrollView, Dimensions, FlatList, Image} from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
-
+import { createStackNavigator } from 'react-navigation-stack';
+import config from '../../config-env'
 
   export default class Fav extends Component{
 
-    constructor(){
-      super();
+    constructor(props){
+      super(props);
       this.state = {
-          favorites: [], 
-          keyword: ''    
+          sketches: [],    
+          keyword: props.navigation.getParam('keyword') 
       }}
 
     async componentDidMount(){
       await this.getToken()
-      this.showFavorite()
+      this.showSearch()
     }
 
     async getToken () {
@@ -40,39 +41,42 @@ import axios from 'axios'
         }))
     }
 
-    showFavorite = () => {
+    showSearch = () => {
       axios({
         method: 'GET',
         headers: {
           'content-type': 'application/json',
           'authorization': `Bearer ${this.state.token}`
         },
-        url: 'http://192.168.1.82:5001/api/v1/sketches/favorites'
+        url: `${config.API_URL}/sketches?title=${this.state.keyword}`
       }).then(res => {
-        const favorites = res.data
-        this.setState({favorites})
+        const sketches = res.data
+        this.setState({sketches})
       })
 
-    }   
+    }  
+    
+    static navigationOptions = ({ navigation }) => {
+      return {
+          title: "Search for: " + navigation.getParam('keyword'),
+          headerStyle: {
+              backgroundColor: '#32cd32',
+            },
+          headerTitleStyle: {
+              fontWeight: 'bold',
+          },
+          };
+    }
 
 
     render(){
         return(
         <Container>
-            <Header searchBar rounded style={styles.Header}>
-              <Item rounded>
-                <Input placeholder="Search" onChangeText={keyword =>this.setState({keyword})}/>
-                <Icon name="search" style={styles.HeaderIcon}
-                onPress={() => this.props.navigation.navigate('SearchFavorite', {     
-                  keyword: this.state.keyword,
-                })}
-                />
-              </Item>
-            </Header>
+           
             <Content style={styles.Content}>
               <View style={styles.AllCon}>    
                 <FlatList
-                data = {this.state.favorites}
+                data = {this.state.sketches}
                 keyExtractor = {item => item.id}
                 renderItem = {({item}) => 
                 <View style={styles.AllCont} key={item.image}>
@@ -84,9 +88,8 @@ import axios from 'axios'
                         skId: item.id
                     })}
                     >
-                       <Image style={styles.AllImg} source={{ uri: item.image }} /> 
+                        <Image style={styles.AllImg} source={{ uri: item.image }} /> 
                     </TouchableOpacity>
-                   
                     <View style={styles.AllDes}>
                         <Text style={styles.AllTitle}>{item.title}</Text>
                         <Text style={styles.AllStar}>{item.genre}</Text>
@@ -131,3 +134,5 @@ import axios from 'axios'
       fontSize: 13
     },
   })
+
+  

@@ -3,6 +3,7 @@ const Sequelize = require('sequelize')
 const Sketch = models.sketch
 const Chapter = models.chapter
 const Page = models.page
+const Fav = models.favorite
 const User = models.user
 const Op = Sequelize.Op
 
@@ -35,6 +36,55 @@ exports.favoriteIndex = (req, res) => {
   }).then(sketches => res.send(sketches))
   }
  
+}
+
+exports.favIndex = (req,res) => {
+  if (req.query.title){
+    Fav.findAll({
+      where: {user_id : req.params.id },
+      include: {
+        model: Sketch,
+        as: 'sketchId',
+        where: { title: {[Op.like]: `%${req.query.title}%`} }
+      }
+    }).then(sketch=>res.send(sketch))
+  } else {
+    Fav.findAll({
+    where: {user_id : req.params.id},
+    include: {
+      model: Sketch,
+      as: 'sketchId'
+    }
+  })
+  .then(sketch=>res.send(sketch))
+  }
+}
+
+exports.FavStore = (req,res) => {
+  Fav.create({
+    user_id: JSON.parse(req.params.id),
+    sketch_id: req.body.sketch_id
+  }
+  ).then(sketch=>{
+    res.send({
+    message: 'success',
+    sketch
+  })
+})
+}
+
+exports.FavDestroy = (req,res) => {
+
+  Fav.destroy(
+    {where: {
+      sketch_id: req.body.sketch_id, 
+      user_id: req.params.id}
+    })
+    .then(sketch => {
+    res.send({
+      message: 'success',
+    }) 
+  }) 
 }
 
 exports.show = (req, res) => {
@@ -215,6 +265,8 @@ exports.imageIndex = (req,res) => {
     }
   }).then(chapter=>res.send(chapter))
 }
+
+
 
 exports.imageStore = (req,res) => {
   const data = req.body

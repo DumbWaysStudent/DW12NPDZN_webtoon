@@ -19,7 +19,7 @@ import Carousel from 'react-native-banner-carousel';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
-
+import config from '../../config-env'
 
   export default class ForYou extends Component{
     BannerWidth = Dimensions.get('window').width;
@@ -31,19 +31,29 @@ import axios from 'axios'
           favorites: [],
           keyword: '',
           id: null
+          
         }}
     
 
     async componentDidMount(){
       await this.getToken()
+      await this.getId()
       this.showSketches()
       this.showFavorite()
+      console.log(config.API_URL)
     }
 
     async getToken () {
       await AsyncStorage.getItem('token').then(key=>
         this.setState({
           token: key
+        }))
+    }
+
+    async getId () {
+      await AsyncStorage.getItem('id').then(key=>
+        this.setState({
+          id: JSON.parse(key)
         }))
     }
 
@@ -54,7 +64,7 @@ import axios from 'axios'
           'content-type': 'application/json',
           'authorization': `Bearer ${this.state.token}`
         },
-        url: 'http://192.168.1.82:5001/api/v1/sketches'
+        url: `${config.API_URL}/sketches`
       }).then(res => {
         const sketches = res.data
         console.log(sketches)
@@ -70,14 +80,29 @@ import axios from 'axios'
           'content-type': 'application/json',
           'authorization': `Bearer ${this.state.token}`
         },
-        url: 'http://192.168.1.82:5001/api/v1/sketches/favorites'
+        url: `${config.API_URL}/user/${this.state.id}/favorites`
       }).then(res => {
         const favorites = res.data
-        console.log(favorites)
         this.setState({favorites})
+        console.log(this.state.favorites)
       })
 
     }   
+
+    // createFav = (id) => {
+ 
+    //   axios({
+    //     method: 'POST',
+    //     headers: {
+    //       'content-type': 'application/json',
+    //       'authorization': `Bearer ${this.state.token}`
+    //     },
+    //     url: `http://192.168.43.122:5001/api/v1/user/${this.state.id}/favorite`,
+    //     data: {
+    //       sketch_id: id ,
+    //     }
+    //   }).then(this.showFavorite())
+    // }
 
     render(){    
       return(
@@ -103,7 +128,7 @@ import axios from 'axios'
             pageSize={this.BannerWidth}      
           >
             {this.state.sketches.map((image)=> (
-            <View style={styles.Carousel} key={image.image}>
+            <View style={styles.Carousel} >
               <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('DetailWebtoon', {
                   
@@ -123,17 +148,17 @@ import axios from 'axios'
           <Text style={styles.Fav}>Favourite</Text>
           <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
             {this.state.favorites.map((image)=> (   
-            <View style={styles.ScrollViewCon} key={image.image}>
+            <View style={styles.ScrollViewCon} >
                 <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('DetailWebtoon', {
                  
-                  detail: image.image,
-                  title: image.title,
-                  skId: image.id
+                  detail: image.sketchId.image,
+                  title: image.sketchId.title,
+                  skId: image.sketchId.id
                 })}
                 >
-                <Image style={styles.ScrollViewImg} source={{ uri: image.image }} />
-                <Text>{image.title}</Text>
+                <Image style={styles.ScrollViewImg} source={{ uri: image.sketchId.image }} />
+                <Text>{image.sketchId.title}</Text>
                 </TouchableOpacity>         
             </View>))}
           </ScrollView>    
@@ -141,7 +166,7 @@ import axios from 'axios'
         <View style={styles.AllCon}>
             <Text style={styles.All}>All</Text>
             {this.state.sketches.map((image)=> (
-            <View style={styles.AllCont} key={image.image}>  
+            <View style={styles.AllCont} >  
                 <Row>
                 <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('DetailWebtoon', {
@@ -163,9 +188,7 @@ import axios from 'axios'
             </View>))}                
         </View>
         </Content>
-
-        
-        
+   
       </Container>
       )
     }
@@ -195,20 +218,20 @@ import axios from 'axios'
       fontSize: 20},
     ScrollViewCon: {
       flex:1, 
-      marginRight:15, 
+      marginRight:8, 
       alignSelf: 'center', 
-      width:150},
+      width:120},
     ScrollViewImg: { 
-      width: 150, 
+      width: 120, 
       borderWidth: 2, 
       borderColor:'black', 
-      height: 150, 
+      height: 120, 
       marginBottom: 5 },
     AllCon: {
       margin: 15, 
       marginTop: 0},
     All: {
-      marginBottom: 18, 
+      marginBottom: 7, 
       fontWeight: 'bold', 
       fontSize: 20},
     AllCont: {

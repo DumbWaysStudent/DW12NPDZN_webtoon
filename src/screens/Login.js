@@ -14,7 +14,7 @@ import {
 import { StyleSheet, Image} from 'react-native'
 import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage'
-
+import config from '../../config-env'
 
   export default class Login extends Component{
 
@@ -35,7 +35,7 @@ import AsyncStorage from '@react-native-community/async-storage'
     userLogin = () => {
       axios({
         method: 'POST',
-        url: `http://192.168.1.82:5001/api/v1/login`,
+        url: `${config.API_URL}/login`,
         data: {
           email: this.state.username,
           password: this.state.password
@@ -62,7 +62,7 @@ import AsyncStorage from '@react-native-community/async-storage'
     userRegister = () => {
       axios({
         method: 'POST',
-        url: `http://192.168.1.82:5001/api/v1/register`,
+        url: `${config.API_URL}/register`,
         data: {
           email: this.state.username,
           password: this.state.password

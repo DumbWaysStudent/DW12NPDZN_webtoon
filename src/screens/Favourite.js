@@ -17,21 +17,23 @@ import {
 import { StyleSheet, TouchableOpacity, ScrollView, Dimensions, FlatList, Image} from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
-import { createStackNavigator } from 'react-navigation-stack';
-
+import config from '../../config-env'
 
   export default class Fav extends Component{
 
-    constructor(props){
-      super(props);
+    constructor(){
+      super();
       this.state = {
-          sketches: [],    
-          keyword: props.navigation.getParam('keyword') 
+          id: null,
+          favorites: [], 
+          keyword: ''    
       }}
 
     async componentDidMount(){
       await this.getToken()
-      this.showSearch()
+      await this.getId()
+      this.showFavorite()
+      
     }
 
     async getToken () {
@@ -41,58 +43,62 @@ import { createStackNavigator } from 'react-navigation-stack';
         }))
     }
 
-    showSearch = () => {
+    async getId () {
+      await AsyncStorage.getItem('id').then(key=>
+        this.setState({
+          id: JSON.parse(key)
+        }))
+    }
+
+    showFavorite = () => {
       axios({
         method: 'GET',
         headers: {
           'content-type': 'application/json',
           'authorization': `Bearer ${this.state.token}`
         },
-        url: `http://192.168.1.82:5001/api/v1/sketches/favorites?title=${this.state.keyword}`
+        url: `${config.API_URL}/user/${this.state.id}/favorites`
       }).then(res => {
-        const sketches = res.data
-        this.setState({sketches})
+        const favorites = res.data
+        this.setState({favorites})
       })
-
     }   
-
-    static navigationOptions = ({ navigation }) => {
-        return {
-            title: "Search for: " + navigation.getParam('keyword'),
-            headerStyle: {
-                backgroundColor: '#32cd32',
-              },
-            headerTitleStyle: {
-                fontWeight: 'bold',
-            },
-            };
-      }
 
 
     render(){
         return(
         <Container>
-            
+            <Header searchBar rounded style={styles.Header}>
+              <Item rounded>
+                <Input placeholder="Search" onChangeText={keyword =>this.setState({keyword})}/>
+                <Icon name="search" style={styles.HeaderIcon}
+                onPress={() => this.props.navigation.navigate('SearchFavorite', {     
+                  keyword: this.state.keyword,
+                })}
+                />
+              </Item>
+            </Header>
             <Content style={styles.Content}>
               <View style={styles.AllCon}>    
                 <FlatList
-                data = {this.state.sketches}
+                data = {this.state.favorites}
                 keyExtractor = {item => item.id}
                 renderItem = {({item}) => 
                 <View style={styles.AllCont} key={item.image}>
                     <Row>
                     <TouchableOpacity
                         onPress={() => this.props.navigation.navigate('DetailWebtoon', {
-                        detail: item.image,
-                        title: item.title,
-                        skId: item.id
+                        detail: item.sketchId.image,
+                        title: item.sketchId.title,
+                        skId: item.sketchId.id
                     })}
                     >
-                        <Image style={styles.AllImg} source={{ uri: item.image }} /> 
+                       <Image style={styles.AllImg} source={{ uri: item.sketchId.image }} /> 
                     </TouchableOpacity>
+                   
                     <View style={styles.AllDes}>
-                        <Text style={styles.AllTitle}>{item.title}</Text>
-                        <Text style={styles.AllStar}>{item.genre}</Text>
+                        <Text style={styles.AllTitle}>{item.sketchId.title}</Text>
+                        <Text style={styles.AllStar}>{item.sketchId.genre}</Text>
                     </View>
                     </Row>
                 </View>
@@ -134,5 +140,3 @@ import { createStackNavigator } from 'react-navigation-stack';
       fontSize: 13
     },
   })
-
-  

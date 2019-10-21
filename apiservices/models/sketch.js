@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'sketch_id',
       as: 'chapterId'
     })
+    
   };
   return sketch;
 };

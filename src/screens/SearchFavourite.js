@@ -18,7 +18,7 @@ import { StyleSheet, TouchableOpacity, ScrollView, Dimensions, FlatList, Image} 
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import { createStackNavigator } from 'react-navigation-stack';
-
+import config from '../../config-env'
 
   export default class Fav extends Component{
 
@@ -26,11 +26,13 @@ import { createStackNavigator } from 'react-navigation-stack';
       super(props);
       this.state = {
           sketches: [],    
-          keyword: props.navigation.getParam('keyword') 
+          keyword: props.navigation.getParam('keyword'),
+          id: null
       }}
 
     async componentDidMount(){
       await this.getToken()
+      await this.getId()
       this.showSearch()
     }
 
@@ -41,6 +43,13 @@ import { createStackNavigator } from 'react-navigation-stack';
         }))
     }
 
+    async getId () {
+      await AsyncStorage.getItem('id').then(key=>
+        this.setState({
+          id: JSON.parse(key)
+        }))
+    }
+
     showSearch = () => {
       axios({
         method: 'GET',
@@ -48,31 +57,31 @@ import { createStackNavigator } from 'react-navigation-stack';
           'content-type': 'application/json',
           'authorization': `Bearer ${this.state.token}`
         },
-        url: `http://192.168.1.82:5001/api/v1/sketches?title=${this.state.keyword}`
+        url: `${config.API_URL}/user/${this.state.id}/favorites?title=${this.state.keyword}`
       }).then(res => {
         const sketches = res.data
         this.setState({sketches})
       })
 
-    }  
-    
+    }   
+
     static navigationOptions = ({ navigation }) => {
-      return {
-          title: "Search for: " + navigation.getParam('keyword'),
-          headerStyle: {
-              backgroundColor: '#32cd32',
+        return {
+            title: "Search for: " + navigation.getParam('keyword'),
+            headerStyle: {
+                backgroundColor: '#32cd32',
+              },
+            headerTitleStyle: {
+                fontWeight: 'bold',
             },
-          headerTitleStyle: {
-              fontWeight: 'bold',
-          },
-          };
-    }
+            };
+      }
 
 
     render(){
         return(
         <Container>
-           
+            
             <Content style={styles.Content}>
               <View style={styles.AllCon}>    
                 <FlatList
@@ -83,16 +92,16 @@ import { createStackNavigator } from 'react-navigation-stack';
                     <Row>
                     <TouchableOpacity
                         onPress={() => this.props.navigation.navigate('DetailWebtoon', {
-                        detail: item.image,
-                        title: item.title,
-                        skId: item.id
+                        detail: item.sketchId.image,
+                        title: item.sketchId.title,
+                        skId: item.sketchId.id
                     })}
                     >
-                        <Image style={styles.AllImg} source={{ uri: item.image }} /> 
+                        <Image style={styles.AllImg} source={{ uri: item.sketchId.image }} /> 
                     </TouchableOpacity>
                     <View style={styles.AllDes}>
-                        <Text style={styles.AllTitle}>{item.title}</Text>
-                        <Text style={styles.AllStar}>{item.genre}</Text>
+                        <Text style={styles.AllTitle}>{item.sketchId.title}</Text>
+                        <Text style={styles.AllStar}>{item.sketchId.genre}</Text>
                     </View>
                     </Row>
                 </View>

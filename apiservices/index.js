@@ -20,11 +20,13 @@ app.group("/api/v1", (router) => {
 	router.post('/login', AuthController.login)
 
 	router.get('/sketches', authenticated, SketchController.index)
+	// router.get('/sketches/favorites', authenticated, SketchController.favoriteIndex)	
 	
-	router.get('/sketches/favorites', authenticated, SketchController.favoriteIndex)	
-	
+	router.get('/user/:id/favorites', authenticated, SketchController.favIndex)
+	router.post('/user/:id/favorite', authenticated, SketchController.FavStore)
+	router.delete('/user/:id/favorite', authenticated, SketchController.FavDestroy)
+
 	router.get('/sketch/:skId/chapters', authenticated, SketchController.show)
-	
 	router.get('/sketch/:skId/chapter/:chId', authenticated, SketchController.chapterShow)
 	
 	router.get('/user/:id/sketches', authenticated, SketchController.userIndex)

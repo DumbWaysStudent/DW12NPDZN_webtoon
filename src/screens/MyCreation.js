@@ -23,7 +23,7 @@ import { StyleSheet, ScrollView, Dimensions, FlatList, Image} from 'react-native
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
-
+import config from '../../config-env'
 
   export default class MyCreation extends Component{
 
@@ -69,7 +69,7 @@ import axios from 'axios'
           'content-type': 'application/json',
           'authorization': `Bearer ${this.state.token}`
         },
-        url: `http://192.168.1.82:5001/api/v1/user/${this.state.id}/sketches`
+        url: `${config.API_URL}/user/${this.state.id}/sketches`
       }).then(res => {
         const sketches = res.data
         

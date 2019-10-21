@@ -19,6 +19,8 @@ import {
   from 'native-base';
 import { StyleSheet, Image, } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import config from '../../config-env'
+
 
 export default class Profile extends Component{
 

@@ -21,6 +21,7 @@ import { TextInput, ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import ImagePicker from 'react-native-image-picker';
+import config from '../../config-env'
 
 export default class CreateWebtoon extends Component {
 
@@ -35,23 +36,6 @@ constructor(props){
       genre: this.props.navigation.getParam('genre'),
       avatarSource: null,
       details: [],
-      chapter: [{
-          ep: 'Ep.4',
-          date:'07 October 2019',
-          image: 'https://dw9to29mmj727.cloudfront.net/products/1421569205.jpg'
-      }, {
-          ep: 'Ep.3',
-          date:'06 October 2019',
-          image: 'https://dw9to29mmj727.cloudfront.net/products/1421564610.jpg'
-      }, {
-          ep: 'Ep.2',
-          date:'05 October 2019',
-          image: 'https://dw9to29mmj727.cloudfront.net/products/1421585650.jpg'
-      }, {
-          ep: 'Ep.1',
-          date:'04 October 2019',
-          image: 'https://dw9to29mmj727.cloudfront.net/products/1421585642.jpg'
-      }],
       }
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
     }
@@ -85,7 +69,7 @@ editSketch = () => {
       'content-type': 'application/json',
       'authorization': `Bearer ${this.state.token}`
     },
-    url: `http://192.168.1.82:5001/api/v1/user/${this.state.id}/sketch/${this.state.skId}`,
+    url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}`,
     data: {
       title: this.state.title,
       genre: this.state.genre,
@@ -104,7 +88,7 @@ showDetails = () => {
       'content-type': 'application/json',
       'authorization': `Bearer ${this.state.token}`
     },
-    url: `http://192.168.1.82:5001/api/v1/sketch/${this.state.skId}/chapters`
+    url: `${config.API_URL}/sketch/${this.state.skId}/chapters`
   }).then(res => {
     const details = res.data
     console.log(details)
@@ -120,7 +104,7 @@ deleteSketch = () => {
       'content-type': 'application/json',
       'authorization': `Bearer ${this.state.token}`
     },
-    url: `http://192.168.1.82:5001/api/v1/user/${this.state.id}/sketch/${this.state.skId}`,
+    url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}`,
   }).then(res => {
     this.props.navigation.navigate('MyCreation')
   })
@@ -212,7 +196,10 @@ render() {
             renderItem = {({item}) => 
             <View style={styles.AllCont} key={item.image}>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('EditEpisode',{
-                ep: item.ep
+                chTitle: item.chapter_title,
+                chImage: item.image,
+                chId: item.id,
+                skId: this.state.skId
             })}>
               <Row>
                 <Image 

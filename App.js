@@ -16,20 +16,20 @@ import {
   } 
   from 'native-base';
 
-import Login from './screens/Login'
-import ForYou from './screens/ForYou'
-import DetailWebtoon from './screens/DetailWebtoon'
-import DetailEp from './screens/DetailEpisode'
-import Favourite from './screens/Favourite'
-import Profile from './screens/Profile'
-import EditProfile from './screens/EditProfile'
-import MyCreation from './screens/MyCreation'
-import CreateWebtoon from './screens/CreateWebtoon'
-import CreateEpisode from './screens/CreateEpisode'
-import EditWebtoon from './screens/EditWebtoon'
-import EditEpisode from './screens/EditEpisode'
-import SearchWebtoon from './screens/SearchWebtoon'
-import SearchFavorite from './screens/SearchFavourite'
+import Login from './src/screens/Login'
+import ForYou from './src/screens/ForYou'
+import DetailWebtoon from './src/screens/DetailWebtoon'
+import DetailEp from './src/screens/DetailEpisode'
+import Favourite from './src/screens/Favourite'
+import Profile from './src/screens/Profile'
+import EditProfile from './src/screens/EditProfile'
+import MyCreation from './src/screens/MyCreation'
+import CreateWebtoon from './src/screens/CreateWebtoon'
+import CreateEpisode from './src/screens/CreateEpisode'
+import EditWebtoon from './src/screens/EditWebtoon'
+import EditEpisode from './src/screens/EditEpisode'
+import SearchWebtoon from './src/screens/SearchWebtoon'
+import SearchFavorite from './src/screens/SearchFavourite'
 
 const SignedOut = createStackNavigator(
     {

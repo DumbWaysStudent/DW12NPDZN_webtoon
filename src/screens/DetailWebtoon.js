@@ -12,6 +12,7 @@ import { StyleSheet, FlatList, Dimensions, Share, Image} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage'
+import config from '../../config-env'
 
   export default class DetailWebtoon extends Component{
 
@@ -60,7 +61,7 @@ import AsyncStorage from '@react-native-community/async-storage'
           'content-type': 'application/json',
           'authorization': `Bearer ${this.state.token}`
         },
-        url: `http://192.168.1.82:5001/api/v1/sketch/${this.state.id}/chapters`
+        url: `${config.API_URL}/sketch/${this.state.id}/chapters`
       }).then(res => {
         const details = res.data
         console.log(details)

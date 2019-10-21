@@ -25,6 +25,7 @@ import {
     } 
     from 'native-base';
 import ImagePicker from 'react-native-image-picker';
+import config from '../../config-env'
 
 export default class EditProfile extends React.Component {
  

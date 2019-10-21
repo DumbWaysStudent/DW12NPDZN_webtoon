@@ -12,7 +12,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import ImagePicker from 'react-native-image-picker';
-
+import config from '../../config-env'
 
 export default class CreateWebtoon extends Component {
 
@@ -94,6 +94,8 @@ static navigationOptions = ({ navigation }) => {
           avatarSource: source,
           
         });
+
+      
       }
     });
   }
@@ -106,7 +108,7 @@ createSketch = () => {
       'content-type': 'application/json',
       'authorization': `Bearer ${this.state.token}`
     },
-    url: `http://192.168.1.82:5001/api/v1/user/${this.state.id}/sketch`,
+    url: `${config.API_URL}/user/${this.state.id}/sketch`,
     data: {
       title: this.state.title,
       genre: this.state.genre,
@@ -126,7 +128,7 @@ createSketchAndCh = () => {
       'content-type': 'application/json',
       'authorization': `Bearer ${this.state.token}`
     },
-    url: `http://192.168.1.82:5001/api/v1/user/${this.state.id}/sketch`,
+    url: `${config.API_URL}/user/${this.state.id}/sketch`,
     data: {
       title: this.state.title,
       genre: this.state.genre,
