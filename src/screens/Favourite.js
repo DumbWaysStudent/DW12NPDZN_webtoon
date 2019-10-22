@@ -26,21 +26,26 @@ import config from '../../config-env'
       this.state = {
           id: null,
           favorites: [], 
-          keyword: ''    
+          keyword: '',    
+          token: null
       }}
 
     async componentDidMount(){
       await this.getToken()
       await this.getId()
       this.showFavorite()
-      
     }
 
     async getToken () {
-      await AsyncStorage.getItem('token').then(key=>
+      const getToken = await AsyncStorage.getItem('token')
+      if (getToken !== null) {
         this.setState({
-          token: key
-        }))
+          token: getToken
+        })
+      } else {
+        alert('You Must Login to access this screen')
+        this.props.navigation.navigate('Login')
+      }   
     }
 
     async getId () {

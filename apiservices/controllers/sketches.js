@@ -1,3 +1,4 @@
+const multer = require('multer')
 const models = require('../models')
 const Sequelize = require('sequelize')
 const Sketch = models.sketch
@@ -7,6 +8,8 @@ const Fav = models.favorite
 const User = models.user
 const Op = Sequelize.Op
 
+const ip = `http://192.168.43.122:5001/`
+const upload = multer({dest : './images'})
 
 exports.index = (req, res) => {
 
@@ -125,7 +128,7 @@ exports.userStore = (req,res) => {
       title: req.body.title,
       genre: req.body.genre,
       isFavorite: req.body.isFavorite,
-      image: req.body.image,
+      image: ip + req.file.path,
       created_by: req.params.id
     },
       {

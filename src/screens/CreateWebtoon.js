@@ -88,60 +88,83 @@ static navigationOptions = ({ navigation }) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
-
-        this.setState({
-          avatarSource: source,
-          
-        });
-
-      
+        if (response.uri) {
+          this.setState({ avatarSource: response })
+          console.log(this.state.avatarSource)
+        }
       }
     });
   }
 
-createSketch = () => {
- 
-  axios({
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'authorization': `Bearer ${this.state.token}`
-    },
-    url: `${config.API_URL}/user/${this.state.id}/sketch`,
-    data: {
-      title: this.state.title,
-      genre: this.state.genre,
-      isFavorite: false,
-      image: this.state.image,
-    }
-  }).then(res => {
-    this.props.navigation.navigate('MyCreation')
-  })
-}
-
-createSketchAndCh = () => {
- 
-  axios({
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'authorization': `Bearer ${this.state.token}`
-    },
-    url: `${config.API_URL}/user/${this.state.id}/sketch`,
-    data: {
-      title: this.state.title,
-      genre: this.state.genre,
-      isFavorite: false,
-      image: this.state.image,
-    }
-  }).then(res => {
-    
-    this.props.navigation.navigate('CreateEpisode',{
-      skId: res.data.sketch.id
+  createSketch = () => {
+    axios({
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'authorization': `Bearer ${this.state.token}`
+      },
+      url: `${config.API_URL}/user/${this.state.id}/sketch`,
+      data: this.createFormData(this.state.avatarSource, 
+        {
+          title: this.state.title,
+          genre: this.state.genre,
+          isFavorite: false,
+          image: this.state.image,
+        }
+        )
     })
-  })
-}
+      .then(response => {
+        console.log("upload succes", response);
+        this.setState({ avatarSource: null });
+        this.props.navigation.navigate('MyCreation')
+      })
+      .catch(error => {
+        console.log("upload error", error);
+        alert("Upload failed!");
+      });
+
+  }
+
+  createFormData = (photo, body) => {
+    const data = new FormData();
+  
+    data.append("photo", {
+      name: photo.fileName,
+      type: photo.type,
+      uri: photo.uri  
+    });
+    Object.keys(body).forEach(key => {
+      data.append(key, body[key]);
+    });
+  
+    return data;
+  };
+
+
+  createSketchAndCh = () => {
+    axios({
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'authorization': `Bearer ${this.state.token}`
+      },
+      url: `${config.API_URL}/user/${this.state.id}/sketch`,
+      data: this.createFormData(this.state.avatarSource, 
+        {
+          title: this.state.title,
+          genre: this.state.genre,
+          isFavorite: false,
+          image: this.state.image,
+        }
+        )
+    })
+    .then(res => {
+      this.setState({ avatarSource: null });
+      this.props.navigation.navigate('CreateEpisode',{
+        skId: res.data.sketch.id
+      })
+    })
+  }
 
 render() {
   return (
@@ -184,7 +207,7 @@ render() {
         >
           <Text style={{fontSize:17}} >+ Add Episode</Text>
         </Button>
-
+        
       </Content>
     </Container>
     );

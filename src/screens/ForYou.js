@@ -20,8 +20,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import config from '../../config-env'
+import {connect} from 'react-redux'
+import {getAllSketch} from '../_redux/store'
 
-  export default class ForYou extends Component{
+  class ForYou extends Component{
     BannerWidth = Dimensions.get('window').width;
     constructor(props){
         super(props);
@@ -40,7 +42,6 @@ import config from '../../config-env'
       await this.getId()
       this.showSketches()
       this.showFavorite()
-      console.log(config.API_URL)
     }
 
     async getToken () {
@@ -57,20 +58,23 @@ import config from '../../config-env'
         }))
     }
 
-    showSketches = () => {
-      axios({
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          'authorization': `Bearer ${this.state.token}`
-        },
-        url: `${config.API_URL}/sketches`
-      }).then(res => {
-        const sketches = res.data
-        console.log(sketches)
-        this.setState({sketches})
-      })
+    // showSketches = () => {
+    //   axios({
+    //     method: 'GET',
+    //     headers: {
+    //       'content-type': 'application/json',
+    //       'authorization': `Bearer ${this.state.token}`
+    //     },
+    //     url: `${config.API_URL}/sketches`
+    //   }).then(res => {
+    //     const sketches = res.data
+    //     console.log(sketches)
+    //     this.setState({sketches})
+    //   })
+    // }
 
+    showSketches = () => {
+      this.props.getAllSketch()
     }
 
     showFavorite = () => {
@@ -86,25 +90,26 @@ import config from '../../config-env'
         this.setState({favorites})
         console.log(this.state.favorites)
       })
-
     }   
 
-    // createFav = (id) => {
- 
-    //   axios({
-    //     method: 'POST',
-    //     headers: {
-    //       'content-type': 'application/json',
-    //       'authorization': `Bearer ${this.state.token}`
-    //     },
-    //     url: `http://192.168.43.122:5001/api/v1/user/${this.state.id}/favorite`,
-    //     data: {
-    //       sketch_id: id ,
-    //     }
-    //   }).then(this.showFavorite())
-    // }
+    createFav = (id) => {
+      axios({
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${this.state.token}`
+        },
+        url: `http://192.168.43.122:5001/api/v1/user/${this.state.id}/favorite`,
+        data: {
+          sketch_id: id ,
+        }
+      }).then(this.showFavorite())
+      
+    }
 
     render(){    
+      const {sketch} = this.props
+
       return(
         <Container>
          <Header searchBar rounded style={styles.Header}>
@@ -127,7 +132,7 @@ import config from '../../config-env'
             loop  
             pageSize={this.BannerWidth}      
           >
-            {this.state.sketches.map((image)=> (
+            {sketch.sketch.map((image)=> (
             <View style={styles.Carousel} >
               <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('DetailWebtoon', {
@@ -165,7 +170,7 @@ import config from '../../config-env'
         </View>
         <View style={styles.AllCon}>
             <Text style={styles.All}>All</Text>
-            {this.state.sketches.map((image)=> (
+            {sketch.sketch.map((image)=> (
             <View style={styles.AllCont} >  
                 <Row>
                 <TouchableOpacity
@@ -180,7 +185,9 @@ import config from '../../config-env'
                 </TouchableOpacity>
                   <View style={styles.AllDes}>
                     <Text style={styles.AllTitle}>{image.title}</Text>
-                     <Button warning small style={styles.AllButton}>
+                     <Button warning small style={styles.AllButton}
+                      onPress ={() => this.createFav(image.id)}
+                     >
                         <Text style={styles.AllFav}>+ Favorite</Text>
                      </Button>        
                   </View>
@@ -193,6 +200,21 @@ import config from '../../config-env'
       )
     }
   }
+
+  const mapStateToProps = state => {
+    return {
+      sketch: state.sketch
+    }
+  }
+
+  const mapDispatchToProps = {
+    getAllSketch
+  }
+
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ForYou)
 
   const styles = StyleSheet.create({
     Header: {
@@ -253,7 +275,4 @@ import config from '../../config-env'
       fontSize:12,
       color:'black', 
       fontWeight: 'bold'},
-    
-
-
   })

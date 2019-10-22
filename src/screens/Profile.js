@@ -20,6 +20,7 @@ import {
 import { StyleSheet, Image, } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import config from '../../config-env'
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 export default class Profile extends Component{
@@ -29,15 +30,29 @@ export default class Profile extends Component{
         this.state ={
             pic: "https://scontent.fcgk1-1.fna.fbcdn.net/v/t1.0-9/16265366_404431113233498_256851812072885448_n.jpg?_nc_cat=100&_nc_oc=AQktlMnBMwEVFZ9of9YsmK_h_hGgdt40CSUeC2RR2_nXktOJpKeVijqnj10p8Wg0qk8&_nc_ht=scontent.fcgk1-1.fna&oh=971e3a86ea6a37b3d5e50c5f220c719a&oe=5E17E637",
             username: "Syaiful",
-            
+            token: null
         }
     }
 
-    ComponentDidUpdate(){
+    async componentDidMount(){
+        await this.getToken()
+      }
+
+    async getToken () {
+      const getToken = await AsyncStorage.getItem('token')
+      if (getToken !== null) {
         this.setState({
-            pic: this.props.navigation.getParam('newPic'),
-            username: this.props.navigation.getParam('newUsername'), 
+          token: getToken
         })
+      } else {
+        alert('You Must Login to access this screen')
+        this.props.navigation.navigate('Login')
+      }   
+    }
+    
+    async logout() {
+        await AsyncStorage.removeItem('token');
+        this.props.navigation.navigate('Login')
     }
 
 
@@ -73,7 +88,7 @@ export default class Profile extends Component{
                         </Row>   
                     </TouchableOpacity>
                     <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Login')}
+                    onPress={() => this.logout()}
                     >
                         <Text style={styles.LogOut}>Log Out</Text>
                     </TouchableOpacity>

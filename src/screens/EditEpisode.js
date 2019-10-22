@@ -28,6 +28,7 @@ constructor(props){
       skId: this.props.navigation.getParam('skId'),
       chId: this.props.navigation.getParam('chId'),
       pages: [],
+      delId: null
       }
       this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
     }
@@ -88,7 +89,7 @@ editChapter = () => {
 }
 
 deleteChapter = () => {
-  console.log(this.state.pages, "????????????????/////////////////")
+  
   axios({
     method: 'DELETE',
     headers: {
@@ -99,21 +100,19 @@ deleteChapter = () => {
   }).then(res => {
     this.props.navigation.navigate('EditWebtoon')
   })
+  this.showDetails()
 }
 
-deletePage = () => {
-  console.log(this.state.pages,"????????????????????/")
+deletePage = (id) => {
   axios({
     method: 'DELETE',
     headers: {
       'content-type': 'application/json',
       'authorization': `Bearer ${this.state.token}`
     },
-    url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter/${this.state.chId}/image/${this.state.pages.id}`,
-  }).then(res => {
-    this.props.navigation.navigate('EditEpisode')
-    this.showDetails()
+    url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter/${this.state.chId}/image/${id}`,
   })
+  this.showDetails()
 }
 
 static navigationOptions = ({ navigation }) => {
@@ -201,7 +200,7 @@ render() {
                 />
                 <View style={styles.AllDes}>
                 {/* <Text style={styles.AllEp}>{item.id}</Text> */}
-                <Button onPress = {() => this.deletePage()} style={styles.AllButton}>
+                <Button onPress = {() => this.deletePage(item.id)} style={styles.AllButton}>
                    <Text style={styles.AllFav}>Delete</Text>
                 </Button>
                 </View>

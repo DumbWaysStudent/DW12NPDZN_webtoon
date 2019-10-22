@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Provider } from 'react-redux';
 import { createAppContainer, createSwitchNavigator} from 'react-navigation';
 import { createStackNavigator,  } from 'react-navigation-stack';
 import { createBottomTabNavigator, BottomTabBar } from 'react-navigation-tabs';
@@ -30,6 +31,8 @@ import EditWebtoon from './src/screens/EditWebtoon'
 import EditEpisode from './src/screens/EditEpisode'
 import SearchWebtoon from './src/screens/SearchWebtoon'
 import SearchFavorite from './src/screens/SearchFavourite'
+
+import store from './src/_redux/store'
 
 const SignedOut = createStackNavigator(
     {
@@ -185,10 +188,30 @@ const Switch = createSwitchNavigator({
   SignedOut: SignedOut
   },
   {
-   initialRouteName: "SignedOut",
+   initialRouteName: "BottomTab",
   });
 
-export default createAppContainer(Switch);
+// export default createAppContainer(Switch);
+
+const AppContainer = createAppContainer(Switch);
+
+// class App extends Component {
+//   render(){
+//     return (
+//       <AppContainer/>
+//     )
+//   }
+// }
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <AppContainer />
+    </Provider>
+  )
+}
+
+export default App
 
 // export default EditEpisode
 

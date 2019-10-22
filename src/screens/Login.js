@@ -15,6 +15,7 @@ import { StyleSheet, Image} from 'react-native'
 import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage'
 import config from '../../config-env'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
   export default class Login extends Component{
 
@@ -167,6 +168,9 @@ import config from '../../config-env'
               >
                 <Text >SIGN UP</Text>
               </Button>
+              <TouchableOpacity style={styles.skip} onPress={() => this.props.navigation.navigate('ForYou')}>
+                <Text style={styles.skipText}>SKIP</Text>
+              </TouchableOpacity>
             </View>
 
         </Content>
@@ -199,5 +203,13 @@ const styles = StyleSheet.create({
   },
   button:{
     marginTop: 20,
+  },
+  skip: {
+    alignItems: 'center',
+    marginTop: 35,
+  },
+  skipText: {
+    color: '#66cdaa',
+    
   }
 })

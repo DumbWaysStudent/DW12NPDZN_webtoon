@@ -1,11 +1,27 @@
 require('express-group-routes')
 const express = require('express')
+const multer = require('multer')
 const bodyParser = require('body-parser')
 
 const app = express()
 const port = 5001
 
 app.use(bodyParser.json())
+app.use('/images',express.static('images'));
+
+
+//multer
+const Storage = multer.diskStorage({
+	destination(req, file, callback) {
+	  callback(null, './images')
+	},
+	filename(req, file, callback) {
+	  callback(null, `${file.fieldname}_${Date.now()}_${file.originalname}`)
+	},
+  })
+  
+const upload = multer({ storage: Storage })
+  
 
 //import controllers
 const SketchController = require('./controllers/sketches')
@@ -19,18 +35,18 @@ app.group("/api/v1", (router) => {
 	router.post('/register', AuthController.register)
 	router.post('/login', AuthController.login)
 
-	router.get('/sketches', authenticated, SketchController.index)
+	router.get('/sketches', SketchController.index)
 	// router.get('/sketches/favorites', authenticated, SketchController.favoriteIndex)	
 	
 	router.get('/user/:id/favorites', authenticated, SketchController.favIndex)
 	router.post('/user/:id/favorite', authenticated, SketchController.FavStore)
 	router.delete('/user/:id/favorite', authenticated, SketchController.FavDestroy)
 
-	router.get('/sketch/:skId/chapters', authenticated, SketchController.show)
-	router.get('/sketch/:skId/chapter/:chId', authenticated, SketchController.chapterShow)
+	router.get('/sketch/:skId/chapters', SketchController.show)
+	router.get('/sketch/:skId/chapter/:chId', SketchController.chapterShow)
 	
 	router.get('/user/:id/sketches', authenticated, SketchController.userIndex)
-	router.post('/user/:id/sketch', authenticated, SketchController.userStore)
+	router.post('/user/:id/sketch', upload.single('photo'), authenticated, SketchController.userStore)
 	router.get('/user/:id/sketch/:skId/chapters', authenticated, SketchController.userShow)
 	router.put('/user/:id/sketch/:skId', authenticated, SketchController.userUpdate)
 	router.delete('/user/:id/sketch/:skId', authenticated, SketchController.userDestroy)
