@@ -6,11 +6,8 @@ import {
   Text, 
   Item, 
   Input, 
-  Button, 
   Header,
   Row,
-  Footer,
-  FooterTab,
   Icon,  
   } 
   from 'native-base';
@@ -18,8 +15,10 @@ import { StyleSheet, TouchableOpacity, ScrollView, Dimensions, FlatList, Image} 
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import config from '../../config-env'
+import {connect} from 'react-redux'
+import getFav from '../_redux/FavStore'
 
-  export default class Fav extends Component{
+  class Fav extends Component{
 
     constructor(){
       super();
@@ -34,6 +33,9 @@ import config from '../../config-env'
       await this.getToken()
       await this.getId()
       this.showFavorite()
+      // this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      //   this.showFavorite()
+      // })
     }
 
     async getToken () {
@@ -56,21 +58,13 @@ import config from '../../config-env'
     }
 
     showFavorite = () => {
-      axios({
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          'authorization': `Bearer ${this.state.token}`
-        },
-        url: `${config.API_URL}/user/${this.state.id}/favorites`
-      }).then(res => {
-        const favorites = res.data
-        this.setState({favorites})
-      })
-    }   
+      this.props.getFav(id = this.state.id, token = this.state.token)
+    }
 
 
     render(){
+      const {favorite} = this.props
+
         return(
         <Container>
             <Header searchBar rounded style={styles.Header}>
@@ -86,7 +80,7 @@ import config from '../../config-env'
             <Content style={styles.Content}>
               <View style={styles.AllCon}>    
                 <FlatList
-                data = {this.state.favorites}
+                data = {favorite.favorite}
                 keyExtractor = {item => item.id}
                 renderItem = {({item}) => 
                 <View style={styles.AllCont} key={item.image}>
@@ -114,6 +108,21 @@ import config from '../../config-env'
         ) 
     }
   }
+
+  const mapStateToProps = state => {
+    return {
+      favorite: state.favorite
+    }
+  }
+
+  const mapDispatchToProps = {
+    getFav
+  }
+
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Fav)
 
   const styles = StyleSheet.create({
     Header: {

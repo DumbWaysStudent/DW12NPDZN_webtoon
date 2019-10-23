@@ -1,30 +1,29 @@
-
 import {
-    GET_ALL_SKETCH_PENDING,
-    GET_ALL_SKETCH_FULFILLED,
-    GET_ALL_SKETCH_REJECTED,
-  } from '../_redux/types';
+  GET_FAVS_PENDING,
+  GET_FAVS_FULFILLED,
+  GET_FAVS_REJECTED,
+} from '../_redux/types'
 
 const initialState = {
-  sketch: [],
+  favorite: [],
   error: null,
   isLoading: true,
 }
 
-const sketch = (state = initialState, action) => {
+const favorite = (state = initialState, action) => {
   switch (action.type) {
-    case GET_ALL_SKETCH_PENDING:
+    case GET_FAVS_PENDING:
       return {
         ...state,
         isLoading: action.payload,
       };
-    case GET_ALL_SKETCH_FULFILLED:
+    case GET_FAVS_FULFILLED:
       return {
         ...state,
-        sketch: action.payload,
+        favorite: action.payload,
         isLoading: action.isLoading,
       };
-    case GET_ALL_SKETCH_REJECTED:
+    case GET_FAVS_REJECTED:
       return {
         ...state,
         error: action.payload,
@@ -35,4 +34,4 @@ const sketch = (state = initialState, action) => {
   }
 }
 
-export default sketch
+export default favorite

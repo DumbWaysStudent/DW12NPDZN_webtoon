@@ -4,23 +4,13 @@ import {
   Content, 
   View, 
   Text, 
-  Item, 
-  Input, 
-  Button, 
-  Header,
   Row,
-  Left,
-  Body,
-  Right,
-  Title,
-  Footer,
   Fab,
-  FooterTab,
   Icon,  
   } 
   from 'native-base';
-import { StyleSheet, ScrollView, Dimensions, FlatList, Image} from 'react-native'
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, FlatList, Image} from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import config from '../../config-env'
@@ -41,11 +31,12 @@ import config from '../../config-env'
       await this.getToken()
       await this.getId()
       this.showSketches()
+      this.focusListener = this.props.navigation.addListener('didFocus', () => {
+        this.showSketches()
+      })
     }
 
-    // componentDidUpdate(){
-    //   this.showSketches()
-    // }
+    
 
     async getToken () {
       await AsyncStorage.getItem('token').then(key=>

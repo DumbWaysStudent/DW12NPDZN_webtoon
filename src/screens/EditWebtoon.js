@@ -44,6 +44,9 @@ async componentDidMount(){
   await this.getToken()
   await this.getId()
   await this.showDetails()
+  this.focusListener = this.props.navigation.addListener('didFocus', () => {
+    this.showDetails()
+  })
   this.props.navigation.setParams({ editSketch: this.editSketch})
 }
 

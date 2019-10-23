@@ -9,8 +9,6 @@ import {
   Button, 
   Header,
   Row,
-  Footer,
-  FooterTab,
   Icon,  
   } 
   from 'native-base';
@@ -21,7 +19,11 @@ import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import config from '../../config-env'
 import {connect} from 'react-redux'
-import {getAllSketch} from '../_redux/store'
+import getAllSketch from '../_redux/sketchStore'
+import getFav from '../_redux/FavStore'
+
+
+
 
   class ForYou extends Component{
     BannerWidth = Dimensions.get('window').width;
@@ -29,19 +31,21 @@ import {getAllSketch} from '../_redux/store'
         super(props);
         this.state = {
           token: '',
-          sketches: [],
-          favorites: [],
+          fav: [],
           keyword: '',
-          id: null
-          
+          id: null,         
         }}
     
 
     async componentDidMount(){
       await this.getToken()
       await this.getId()
-      this.showSketches()
       this.showFavorite()
+      this.showSketches()
+      
+      // this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      //   this.showSketches()
+      // })  
     }
 
     async getToken () {
@@ -58,41 +62,22 @@ import {getAllSketch} from '../_redux/store'
         }))
     }
 
-    // showSketches = () => {
-    //   axios({
-    //     method: 'GET',
-    //     headers: {
-    //       'content-type': 'application/json',
-    //       'authorization': `Bearer ${this.state.token}`
-    //     },
-    //     url: `${config.API_URL}/sketches`
-    //   }).then(res => {
-    //     const sketches = res.data
-    //     console.log(sketches)
-    //     this.setState({sketches})
-    //   })
-    // }
-
-    showSketches = () => {
+    showSketches = () => {  
       this.props.getAllSketch()
     }
 
     showFavorite = () => {
-      axios({
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          'authorization': `Bearer ${this.state.token}`
-        },
-        url: `${config.API_URL}/user/${this.state.id}/favorites`
-      }).then(res => {
-        const favorites = res.data
-        this.setState({favorites})
-        console.log(this.state.favorites)
-      })
-    }   
+      this.props.getFav(id = this.state.id, token = this.state.token)
+      this.setState({fav: this.props.favorite.favorite.map(res => res.sketch_id)})
+      this.showSketches()
+      
+      console.log(this.state.fav, "?????????????")
+    }
+
+    
 
     createFav = (id) => {
+      
       axios({
         method: 'POST',
         headers: {
@@ -103,12 +88,26 @@ import {getAllSketch} from '../_redux/store'
         data: {
           sketch_id: id ,
         }
-      }).then(this.showFavorite())
+      }).then(res =>{this.showFavorite()})
+    }
+
+    deleteFav = (id) => {
       
+      axios({
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${this.state.token}`
+        },
+        url: `http://192.168.43.122:5001/api/v1/user/${this.state.id}/favorite`,
+        data: {
+          sketch_id: id ,
+        }
+      }).then(res => {this.showFavorite()})  
     }
 
     render(){    
-      const {sketch} = this.props
+      const {sketch, favorite} = this.props
 
       return(
         <Container>
@@ -128,7 +127,7 @@ import {getAllSketch} from '../_redux/store'
         <View >
           <Carousel 
             autoplay
-            autoplayTimeout={3000}
+            autoplayTimeout={5000}
             loop  
             pageSize={this.BannerWidth}      
           >
@@ -152,7 +151,7 @@ import {getAllSketch} from '../_redux/store'
         <View style={styles.ScrollView}>
           <Text style={styles.Fav}>Favourite</Text>
           <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-            {this.state.favorites.map((image)=> (   
+            {favorite.favorite.map((image)=> (   
             <View style={styles.ScrollViewCon} >
                 <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('DetailWebtoon', {
@@ -185,11 +184,23 @@ import {getAllSketch} from '../_redux/store'
                 </TouchableOpacity>
                   <View style={styles.AllDes}>
                     <Text style={styles.AllTitle}>{image.title}</Text>
-                     <Button warning small style={styles.AllButton}
-                      onPress ={() => this.createFav(image.id)}
-                     >
-                        <Text style={styles.AllFav}>+ Favorite</Text>
-                     </Button>        
+                    <Row>
+                      {this.state.fav.includes(image.id)? (
+                        <Button danger small style={styles.AllButton}
+                        onPress ={() => this.deleteFav(image.id)}
+                        disabled={this.state.isFavBtn}
+                      >
+                          <Text style={styles.AllFav}>- Favorite</Text>
+                      </Button> 
+                      ): ( 
+                        <Button warning small style={styles.AllButton}
+                        onPress ={() => this.createFav(image.id)}
+                        disabled={this.state.isFavBtn}
+                      >
+                          <Text style={styles.AllFav}>+ Favorite</Text>
+                      </Button> 
+                      )}
+                    </Row>  
                   </View>
                 </Row>  
             </View>))}                
@@ -203,12 +214,14 @@ import {getAllSketch} from '../_redux/store'
 
   const mapStateToProps = state => {
     return {
-      sketch: state.sketch
+      sketch: state.sketch,
+      favorite: state.favorite
     }
   }
 
   const mapDispatchToProps = {
-    getAllSketch
+    getAllSketch,
+    getFav
   }
 
   export default connect(

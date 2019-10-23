@@ -13,14 +13,14 @@ module.exports = {
         {
           chapter_title:'ch.241',
           image: 'https://yuucdn.com/wp-content/uploads/B/Boku%20No%20Hero%20Academia/Chapter%20241/02.jpg',
-          sketch_id: 3,
+          sketch_id: 2,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           chapter_title:'ch.361',
           image: 'https://yuucdn.com/wp-content/uploads/H/Haikyuu/Chapter%20361/001.jpg',
-          sketch_id: 2,
+          sketch_id: 3,
           createdAt: new Date(),
           updatedAt: new Date()
         },

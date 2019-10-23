@@ -6,10 +6,6 @@ const bodyParser = require('body-parser')
 const app = express()
 const port = 5001
 
-app.use(bodyParser.json())
-app.use('/images',express.static('images'));
-
-
 //multer
 const Storage = multer.diskStorage({
 	destination(req, file, callback) {
@@ -22,6 +18,11 @@ const Storage = multer.diskStorage({
   
 const upload = multer({ storage: Storage })
   
+
+
+app.use(bodyParser.json())
+app.use('/images',express.static('images'));
+
 
 //import controllers
 const SketchController = require('./controllers/sketches')
@@ -51,12 +52,12 @@ app.group("/api/v1", (router) => {
 	router.put('/user/:id/sketch/:skId', authenticated, SketchController.userUpdate)
 	router.delete('/user/:id/sketch/:skId', authenticated, SketchController.userDestroy)
 
-	router.post('/user/:id/sketch/:skId/chapter', authenticated, SketchController.chapterStore)
+	router.post('/user/:id/sketch/:skId/chapter', upload.single('photo'), authenticated, SketchController.chapterStore)
 	router.put('/user/:id/sketch/:skId/chapter/:chId', authenticated, SketchController.chapterUpdate)
 	router.delete('/user/:id/sketch/:skId/chapter/:chId', authenticated, SketchController.chapterDestroy)
 
 	router.get('/user/:id/sketch/:skId/chapter/:chId', authenticated, SketchController.imageIndex)
-	router.post('/user/:id/sketch/:skId/chapter/:chId/image', authenticated, SketchController.imageStore)
+	router.post('/user/:id/sketch/:skId/chapter/:chId/image', upload.single('photo'), SketchController.imageStore)
 	router.delete('/user/:id/sketch/:skId/chapter/:chId/image/:pgId', authenticated, SketchController.imageDestroy)
 })
 

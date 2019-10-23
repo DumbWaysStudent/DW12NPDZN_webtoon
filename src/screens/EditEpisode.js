@@ -28,7 +28,7 @@ constructor(props){
       skId: this.props.navigation.getParam('skId'),
       chId: this.props.navigation.getParam('chId'),
       pages: [],
-      delId: null
+      photo: ''
       }
       this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
     }
@@ -37,6 +37,9 @@ async componentDidMount(){
   await this.getToken()
   await this.getId()
   this.showDetails()
+  // this.focusListener = this.props.navigation.addListener('didFocus', () => {
+  //   this.showDetails()
+  // })
   this.props.navigation.setParams({ editChapter: this.editChapter})
   
 }
@@ -65,10 +68,8 @@ showDetails = () => {
     url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter/${this.state.chId}`
   }).then(res => {
     const pages = res.data
-    console.log(pages)
     this.setState({pages})
   })
- 
 }
 
 editChapter = () => {
@@ -89,7 +90,6 @@ editChapter = () => {
 }
 
 deleteChapter = () => {
-  
   axios({
     method: 'DELETE',
     headers: {
@@ -113,6 +113,58 @@ deletePage = (id) => {
     url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter/${this.state.chId}/image/${id}`,
   })
   this.showDetails()
+}
+
+createFormData = (photo, body) => {
+  const data = new FormData();
+
+  data.append("photo", {
+    name: photo.fileName,
+    type: photo.type,
+    uri: photo.uri
+      
+  });
+
+  Object.keys(body).forEach(key => {
+    data.append(key, body[key]);
+  });
+
+  return data;
+};
+
+choosePhoto = () => {
+  const options = {
+    noData: true,
+  }
+  ImagePicker.launchImageLibrary(options, response => {
+    if (response.uri) {
+      this.setState({ photo: response })
+      this.handleUploadPhoto()
+    }
+  })
+}
+
+handleUploadPhoto = () => {
+  console.log(`${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter/${this.state.chId}/image`)
+  axios({
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'authorization': `Bearer ${this.state.token}`
+    },
+    url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter/${this.state.chId}/image`,
+    data: this.createFormData(this.state.photo, { })
+  })
+    .then(response => {
+      console.log("upload succes", response);
+      this.setState({ photo: '' });
+      this.showDetails()
+    })
+    .catch(error => {
+      console.log("upload error", error);
+      alert("Upload failed!");
+    });
+
 }
 
 static navigationOptions = ({ navigation }) => {
@@ -161,6 +213,7 @@ static navigationOptions = ({ navigation }) => {
     });
   }
 
+
 render() {
     return (
         <Container>
@@ -207,11 +260,12 @@ render() {
             </Row>
             </View>
         }/>                                  
-       
+        
         <Button block rounded  style={{alignSelf: 'center', marginTop: 15}} 
+        onPress = {()=>this.choosePhoto()}
         >
         <Text style={{fontSize:17}} >+ Add Image</Text>
-        </Button>  
+        </Button>
         <Button block danger rounded style={{alignSelf: 'center', marginTop: 15}} 
         onPress={() => this.deleteChapter()}
         >

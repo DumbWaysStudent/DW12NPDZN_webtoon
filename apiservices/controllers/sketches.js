@@ -101,7 +101,7 @@ exports.show = (req, res) => {
     }
   })
     .then(sketch=>res.send(sketch))
-  
+
 }
 
 
@@ -191,7 +191,11 @@ exports.userDestroy = (req,res) => {
 exports.chapterStore = (req,res) => {
   const data = req.body
 
-    Chapter.create(data,{
+    Chapter.create({
+      chapter_title: req.body.chapter_title,
+      sketch_id: req.body.sketch_id,
+      image: ip + req.file.path
+    },{
       include:{
         model: Sketch,
         as: 'sketchId',
@@ -274,11 +278,12 @@ exports.imageIndex = (req,res) => {
 exports.imageStore = (req,res) => {
   const data = req.body
 
-    Page.create(data,
-      {where: 
-        {chapter_id: req.params.chId,
-         sketch_id: req.params.skId
-      },
+    Page.create({
+      sketch_id: req.params.skId,
+      chapter_id: req.params.chId,
+      image: ip + req.file.path
+    },
+      {
       include: {
         model: Sketch,
         as: 'sketchId',
@@ -294,8 +299,8 @@ exports.imageStore = (req,res) => {
   })
 }
 
-exports.imageDestroy = (req,res) => {
 
+exports.imageDestroy = (req,res) => {
   Page.destroy( 
     {where: 
       {id: req.params.pgId,

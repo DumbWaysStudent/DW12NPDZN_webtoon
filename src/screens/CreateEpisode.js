@@ -26,15 +26,7 @@ export default class CreateEpisode extends Component {
         ch_title: '',
         token: '',
         avatarSource: null,
-        chapter: [ {
-            ep: '1. cover.png',
-          
-            image: 'https://dw9to29mmj727.cloudfront.net/products/1421585650.jpg'
-          }, {
-            ep: '2. introduction.png',
-            
-            image: 'https://dw9to29mmj727.cloudfront.net/products/1421585642.jpg'
-          }],
+        photo: '',
           }
         this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
       }
@@ -85,12 +77,15 @@ export default class CreateEpisode extends Component {
         'authorization': `Bearer ${this.state.token}`
       },
       url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter`,
-      data: {
-        chapter_title: this.state.ch_title,
-        image: this.state.image,
-        sketch_id: this.state.skId
-      }
+      data: this.createFormData(this.state.avatarSource,
+        {
+          chapter_title: this.state.ch_title,
+          sketch_id: this.state.skId,
+          image: this.state.image
+        }
+        )
     }).then(res => {
+      this.setState({ avatarSource: null });
       this.props.navigation.navigate('MyCreation')
     })
   }
@@ -115,14 +110,41 @@ export default class CreateEpisode extends Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
-
-        this.setState({
-          avatarSource: source,    
-        });    
+        if (response.uri) {
+          this.setState({ avatarSource: response })
+          console.log(this.state.avatarSource)
+        } 
       }
     });
   }
+
+  handleChoosePhoto = () => {
+    const options = {
+      noData: true,
+    }
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.uri) {
+        this.setState({ photo: response })
+        console.log(this.state.photo)
+      }
+    })
+  }
+
+  
+  createFormData = (photo, body) => {
+    const data = new FormData();
+  
+    data.append("photo", {
+      name: photo.fileName,
+      type: photo.type,
+      uri: photo.uri  
+    });
+    Object.keys(body).forEach(key => {
+      data.append(key, body[key]);
+    });
+  
+    return data;
+  };
 
 
   render() {
@@ -172,10 +194,12 @@ export default class CreateEpisode extends Component {
             </View>
         }/>                                  
         
-        <Button block rounded  style={{alignSelf: 'center', marginTop: 15}} >
+        <Button block rounded  style={{alignSelf: 'center', marginTop: 15}} 
+          onPress = {()=> this.handleChoosePhoto()}
+        >
         <Text style={{fontSize:17}} >+ Add Image</Text>
         </Button>  
-
+        
         </Content>
       </Container>
     );
