@@ -49,7 +49,7 @@ app.group("/api/v1", (router) => {
 	router.get('/user/:id/sketches', authenticated, SketchController.userIndex)
 	router.post('/user/:id/sketch', upload.single('photo'), authenticated, SketchController.userStore)
 	router.get('/user/:id/sketch/:skId/chapters', authenticated, SketchController.userShow)
-	router.put('/user/:id/sketch/:skId', authenticated, SketchController.userUpdate)
+	router.put('/user/:id/sketch/:skId', upload.single('photo'), authenticated, SketchController.userUpdate)
 	router.delete('/user/:id/sketch/:skId', authenticated, SketchController.userDestroy)
 
 	router.post('/user/:id/sketch/:skId/chapter', upload.single('photo'), authenticated, SketchController.chapterStore)

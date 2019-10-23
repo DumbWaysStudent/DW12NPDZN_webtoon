@@ -162,7 +162,11 @@ exports.userShow = (req,res) =>{
 exports.userUpdate = (req,res) => {
   const data = req.body
 
-    Sketch.update(data, 
+    Sketch.update({
+      title: req.body.title,
+      genre: req.body.genre,
+      image: ip + req.file.path
+    }, 
       {where: 
         {id: req.params.skId,
          created_by: req.params.id
@@ -173,6 +177,7 @@ exports.userUpdate = (req,res) => {
     })
   }) 
 }
+
 
 exports.userDestroy = (req,res) => {
 

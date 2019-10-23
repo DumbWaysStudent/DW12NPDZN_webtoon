@@ -5,14 +5,6 @@ import {
     Content, 
     Text,
     Row,
-    Left,
-    Right,
-    Body,
-    Title,
-    Header,
-    Form, 
-    Item, 
-    Input, 
     Button, 
     Icon,  
     } 
@@ -47,7 +39,7 @@ async componentDidMount(){
   this.focusListener = this.props.navigation.addListener('didFocus', () => {
     this.showDetails()
   })
-  this.props.navigation.setParams({ editSketch: this.editSketch})
+  this.props.navigation.setParams({ editAndBack: this.editAndBack})
 }
 
 async getId () {
@@ -64,7 +56,27 @@ async getToken () {
     }))
 }
 
-editSketch = () => {
+
+editAndAdd = () => {
+  axios({
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
+      'authorization': `Bearer ${this.state.token}`
+    },
+    url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}`,
+    data: this.createFormData(this.state.avatarSource,
+    {
+      title: this.state.title,
+      genre: this.state.genre,
+    })
+  })
+  .then(res => {
+    this.props.navigation.navigate('CreateEpisode')
+  })
+}
+
+editAndBack = () => {
  
   axios({
     method: 'PUT',
@@ -73,13 +85,13 @@ editSketch = () => {
       'authorization': `Bearer ${this.state.token}`
     },
     url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}`,
-    data: {
+    data: this.createFormData(this.state.avatarSource,
+    {
       title: this.state.title,
       genre: this.state.genre,
-      // isFavorite: false,
-      image: this.state.image,
-    }
-  }).then(res => {
+    })
+  })
+  .then(res => {
     this.props.navigation.navigate('MyCreation')
   })
 }
@@ -124,7 +136,7 @@ static navigationOptions = ({ navigation }) => {
         },
         headerRight: (
             <Icon type="Entypo" name='check' style={styles.BBIcon} 
-            onPress = {navigation.getParam('editSketch')}
+            onPress = {navigation.getParam('editAndBack')}
             />
             ),
         };
@@ -150,15 +162,28 @@ ImagePicker.showImagePicker(options, response => {
   } else if (response.customButton) {
     console.log('User tapped custom button: ', response.customButton);
   } else {
-    let source = {uri: response.uri};
-
-    this.setState({
-      avatarSource: source,
-      
-    });
+    if (response.uri) {
+      this.setState({ avatarSource: response })
+      console.log(this.state.avatarSource)
+    }
   }
 });
 }
+
+createFormData = (photo, body) => {
+  const data = new FormData();
+
+  data.append("photo", {
+    name: photo.fileName,
+    type: photo.type,
+    uri: photo.uri  
+  });
+  Object.keys(body).forEach(key => {
+    data.append(key, body[key]);
+  });
+
+  return data;
+};
 
 render() {
     return (
@@ -220,7 +245,7 @@ render() {
                                           
         
         <Button block rounded style={{alignSelf: 'center', marginTop: 15}} 
-        onPress={() => this.props.navigation.navigate('CreateEpisode')}
+        onPress={() => this.editAndAdd()}
         >
          <Text style={{fontSize:17}} >+ Add Episode</Text>
         </Button>

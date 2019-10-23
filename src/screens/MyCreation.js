@@ -34,6 +34,7 @@ import config from '../../config-env'
       this.focusListener = this.props.navigation.addListener('didFocus', () => {
         this.showSketches()
       })
+      
     }
 
     
