@@ -22,7 +22,7 @@ constructor(props){
     this.state = {
       id: null,
       token: '',
-      avatarSource: null,
+      avatarSource: '',
       chTitle: this.props.navigation.getParam('chTitle'),
       image: this.props.navigation.getParam('chImage'),
       skId: this.props.navigation.getParam('skId'),
@@ -80,10 +80,10 @@ editChapter = () => {
       'authorization': `Bearer ${this.state.token}`
     },
     url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter/${this.state.chId}`,
-    data: {
+    data: this.createFormData(this.state.avatarSource,
+    {
       chapter_title: this.state.chTitle,
-      image: this.state.image,
-    }
+    })
   }).then(res => {
     this.props.navigation.navigate('EditWebtoon')
   })
@@ -145,7 +145,7 @@ choosePhoto = () => {
 }
 
 handleUploadPhoto = () => {
-  console.log(`${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}/chapter/${this.state.chId}/image`)
+  
   axios({
     method: 'POST',
     headers: {
@@ -164,7 +164,6 @@ handleUploadPhoto = () => {
       console.log("upload error", error);
       alert("Upload failed!");
     });
-
 }
 
 static navigationOptions = ({ navigation }) => {
@@ -204,11 +203,10 @@ static navigationOptions = ({ navigation }) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
-
-        this.setState({
-          avatarSource: source,    
-        });    
+        if (response.uri) {
+          this.setState({ avatarSource: response })
+          console.log(this.state.avatarSource)
+        }     
       }
     });
   }
@@ -230,7 +228,7 @@ render() {
           <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
             <View
                 style={[styles.avatar, styles.avatarContainer]}>
-                {this.state.avatarSource === null ? (
+                {this.state.avatarSource === '' ? (
                 <Image style={styles.avatar} source={{uri: this.state.image}} />
                 ) : (
                 <Image style={styles.avatar} source={this.state.avatarSource} />

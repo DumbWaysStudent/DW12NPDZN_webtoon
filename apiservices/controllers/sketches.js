@@ -221,7 +221,10 @@ exports.chapterStore = (req,res) => {
 exports.chapterUpdate = (req,res) => {
   const data = req.body
 
-    Chapter.update(data, 
+    Chapter.update({
+      chapter_title: req.body.chapter_title,
+      image: ip + req.file.path
+    }, 
       {where: 
         {id: req.params.chId,
          sketch_id: req.params.skId

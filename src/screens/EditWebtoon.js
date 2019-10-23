@@ -26,7 +26,7 @@ constructor(props){
       image: this.props.navigation.getParam('image'),
       title: this.props.navigation.getParam('title'),
       genre: this.props.navigation.getParam('genre'),
-      avatarSource: null,
+      avatarSource: '',
       details: [],
       }
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
@@ -54,26 +54,6 @@ async getToken () {
     this.setState({
       token: key
     }))
-}
-
-
-editAndAdd = () => {
-  axios({
-    method: 'PUT',
-    headers: {
-      'content-type': 'application/json',
-      'authorization': `Bearer ${this.state.token}`
-    },
-    url: `${config.API_URL}/user/${this.state.id}/sketch/${this.state.skId}`,
-    data: this.createFormData(this.state.avatarSource,
-    {
-      title: this.state.title,
-      genre: this.state.genre,
-    })
-  })
-  .then(res => {
-    this.props.navigation.navigate('CreateEpisode')
-  })
 }
 
 editAndBack = () => {
@@ -207,12 +187,12 @@ render() {
           <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
             <View
                 style={[styles.avatar, styles.avatarContainer]}>
-                {this.state.avatarSource === null ? (
+                {this.state.avatarSource === '' ? (
                 <Image style={styles.avatar} source={{uri: this.state.image}} />
                 ) : (
                 <Image style={styles.avatar} source={this.state.avatarSource} />
                 )}
-                
+               
             </View>
           </TouchableOpacity>
         </View>
@@ -245,9 +225,11 @@ render() {
                                           
         
         <Button block rounded style={{alignSelf: 'center', marginTop: 15}} 
-        onPress={() => this.editAndAdd()}
+        onPress={() => this.props.navigation.navigate('CreateEpisode', {
+          skId: this.state.skId
+        })}
         >
-         <Text style={{fontSize:17}} >+ Add Episode</Text>
+         <Text style={{fontSize:17}} >+ Add Chapter</Text>
         </Button>
         <Button block danger rounded style={{alignSelf: 'center', marginTop: 15, marginBottom: 15}} 
         onPress={() => this.deleteSketch()}

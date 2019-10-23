@@ -69,7 +69,6 @@ export default class CreateEpisode extends Component {
       }
 
   createChapter = () => {
-
     axios({
       method: 'POST',
       headers: {
@@ -89,6 +88,8 @@ export default class CreateEpisode extends Component {
       this.props.navigation.navigate('MyCreation')
     })
   }
+
+  
 
   selectPhotoTapped() {
     const options = {
@@ -118,17 +119,6 @@ export default class CreateEpisode extends Component {
     });
   }
 
-  handleChoosePhoto = () => {
-    const options = {
-      noData: true,
-    }
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.uri) {
-        this.setState({ photo: response })
-        console.log(this.state.photo)
-      }
-    })
-  }
 
   
   createFormData = (photo, body) => {
@@ -173,7 +163,7 @@ export default class CreateEpisode extends Component {
         </View>
 
 
-        <Text style={{fontSize: 20,fontWeight: 'bold', marginBottom: 7, marginTop: 7}}>Add Images</Text>
+        {/* <Text style={{fontSize: 20,fontWeight: 'bold', marginBottom: 7, marginTop: 7}}>Add Images</Text>
         <FlatList
             data = {this.state.chapters}
             keyExtractor = {item => item.id}
@@ -192,12 +182,12 @@ export default class CreateEpisode extends Component {
                 </View>
             </Row>
             </View>
-        }/>                                  
+        }/>                                   */}
         
         <Button block rounded  style={{alignSelf: 'center', marginTop: 15}} 
-          onPress = {()=> this.handleChoosePhoto()}
+          onPress = {()=> this.createChapter()}
         >
-        <Text style={{fontSize:17}} >+ Add Image</Text>
+        <Text style={{fontSize:17}} >Create Chapter</Text>
         </Button>  
         
         </Content>
