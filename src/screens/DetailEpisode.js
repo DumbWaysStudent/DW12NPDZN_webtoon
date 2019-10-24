@@ -14,6 +14,7 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage'
 import config from '../../config-env'
 
+
   export default class DetailEp extends Component{
     
     constructor(props){
@@ -38,6 +39,7 @@ import config from '../../config-env'
           token: key
         }))
     }
+
 
     showDetails = () => {
       axios({

@@ -20,7 +20,7 @@ import axios from 'axios'
 import {connect} from 'react-redux'
 import * as act from '../_actions/sketch'
 
-
+import config from '../../config-env'
 
   class ForYou extends Component{
     BannerWidth = Dimensions.get('window').width;
@@ -40,9 +40,9 @@ import * as act from '../_actions/sketch'
       this.showFavorite()
       this.showSketches()
       
-      // this.focusListener = this.props.navigation.addListener('didFocus', () => {
-      //   this.showSketches()
-      // })  
+      this.focusListener = this.props.navigation.addListener('didFocus', () => {
+        this.showSketches()
+      })  
     }
 
     async getToken () {
@@ -61,7 +61,7 @@ import * as act from '../_actions/sketch'
 
     showSketches = () => {  
       this.props.getAllSketch()
-      console.log(this.props.sketch.sketch, ">>>>>>>>>>>>>>>>>>")
+      console.log(config.API_URL, ">>>>>>>>>>>>>>>>>>")
     }
 
     showFavorite = () => {
@@ -82,7 +82,7 @@ import * as act from '../_actions/sketch'
           'content-type': 'application/json',
           'authorization': `Bearer ${this.state.token}`
         },
-        url: `http://192.168.43.122:5001/api/v1/user/${this.state.id}/favorite`,
+        url: `${config.API_URL}/user/${this.state.id}/favorite`,
         data: {
           sketch_id: id ,
         }
@@ -97,7 +97,7 @@ import * as act from '../_actions/sketch'
           'content-type': 'application/json',
           'authorization': `Bearer ${this.state.token}`
         },
-        url: `http://192.168.43.122:5001/api/v1/user/${this.state.id}/favorite`,
+        url: `${config.API_URL}/user/${this.state.id}/favorite`,
         data: {
           sketch_id: id ,
         }

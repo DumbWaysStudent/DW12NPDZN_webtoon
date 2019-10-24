@@ -14,6 +14,7 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage'
 import config from '../../config-env'
 
+
   export default class DetailWebtoon extends Component{
 
     constructor(props){

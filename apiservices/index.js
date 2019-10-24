@@ -9,7 +9,8 @@ const port = Number (process.env.PORT || 5001)
 //multer
 const Storage = multer.diskStorage({
 	destination(req, file, callback) {
-	  callback(null, './images')
+		console.log(__dirname)
+	  callback(null, './images/')
 	},
 	filename(req, file, callback) {
 	  callback(null, `${file.fieldname}_${Date.now()}_${file.originalname}`)
@@ -18,6 +19,8 @@ const Storage = multer.diskStorage({
   
 const upload = multer({ storage: Storage })
   
+
+
 
 
 app.use(bodyParser.json())

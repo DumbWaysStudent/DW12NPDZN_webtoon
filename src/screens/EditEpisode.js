@@ -166,6 +166,7 @@ handleUploadPhoto = () => {
     });
 }
 
+
 static navigationOptions = ({ navigation }) => {
   return {
     title: "Edit Chapter",

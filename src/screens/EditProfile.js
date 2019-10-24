@@ -116,6 +116,7 @@ class EditProfile extends React.Component {
     });
   }
 
+  
   createFormData = (photo, body) => {
     const data = new FormData();
   

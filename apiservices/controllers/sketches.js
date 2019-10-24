@@ -8,8 +8,9 @@ const Fav = models.favorite
 const User = models.user
 const Op = Sequelize.Op
 
-const ip = `http://192.168.43.122:5001/`
+const ip = `https://gentle-springs-64991.herokuapp.com/`
 const upload = multer({dest : './images'})
+
 
 exports.index = (req, res) => {
 

@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken')
 const models = require('../models')
 const User = models.user
 
-const ip = `http://192.168.43.122:5001/`
+const ip = `https://gentle-springs-64991.herokuapp.com/`
+// `http://192.168.43.122:5001/`
 
 exports.register = (req, res) => {
   const data = req.body

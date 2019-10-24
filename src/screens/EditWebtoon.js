@@ -42,6 +42,7 @@ async componentDidMount(){
   this.props.navigation.setParams({ editAndBack: this.editAndBack})
 }
 
+
 async getId () {
   await AsyncStorage.getItem('id').then(key=>
     this.setState({
