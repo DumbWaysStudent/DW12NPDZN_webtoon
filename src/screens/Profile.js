@@ -10,16 +10,12 @@ import {
   Body,
   Title,
   Header,
-  Form, 
-  Item, 
-  Input, 
   Button, 
   Icon,  
   } 
   from 'native-base';
 import { StyleSheet, Image, } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import config from '../../config-env'
 import AsyncStorage from '@react-native-community/async-storage';
 
 
@@ -97,6 +93,7 @@ export default class Profile extends Component{
         )
     }
 }
+
 
 const styles = StyleSheet.create({
     Header: {

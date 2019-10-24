@@ -13,10 +13,9 @@ import {
   from 'native-base';
 import { StyleSheet, TouchableOpacity, ScrollView, Dimensions, FlatList, Image} from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
-import axios from 'axios'
-import config from '../../config-env'
+
 import {connect} from 'react-redux'
-import getFav from '../_redux/FavStore'
+import * as act from '../_actions/sketch'
 
   class Fav extends Component{
 
@@ -115,10 +114,11 @@ import getFav from '../_redux/FavStore'
     }
   }
 
-  const mapDispatchToProps = {
-    getFav
+  const mapDispatchToProps = dispatch =>  {
+    return {
+      getFav: (id,token) => dispatch(act.getFav(id,token))
+    }
   }
-
   export default connect(
     mapStateToProps,
     mapDispatchToProps

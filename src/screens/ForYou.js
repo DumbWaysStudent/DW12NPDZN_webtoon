@@ -17,11 +17,8 @@ import Carousel from 'react-native-banner-carousel';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
-import config from '../../config-env'
 import {connect} from 'react-redux'
-import getAllSketch from '../_redux/sketchStore'
-import getFav from '../_redux/FavStore'
-
+import * as act from '../_actions/sketch'
 
 
 
@@ -64,6 +61,7 @@ import getFav from '../_redux/FavStore'
 
     showSketches = () => {  
       this.props.getAllSketch()
+      console.log(this.props.sketch.sketch, ">>>>>>>>>>>>>>>>>>")
     }
 
     showFavorite = () => {
@@ -71,7 +69,7 @@ import getFav from '../_redux/FavStore'
       this.setState({fav: this.props.favorite.favorite.map(res => res.sketch_id)})
       this.showSketches()
       
-      console.log(this.state.fav, "?????????????")
+      console.log(this.props.favorite.favorite, "?????????????")
     }
 
     
@@ -219,9 +217,11 @@ import getFav from '../_redux/FavStore'
     }
   }
 
-  const mapDispatchToProps = {
-    getAllSketch,
-    getFav
+  const mapDispatchToProps = dispatch =>  {
+    return {
+      getAllSketch: () => dispatch(act.getAllSketch()),
+      getFav: (id,token) => dispatch(act.getFav(id,token))
+    }
   }
 
   export default connect(

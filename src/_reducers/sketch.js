@@ -1,9 +1,4 @@
 
-import {
-    GET_ALL_SKETCH_PENDING,
-    GET_ALL_SKETCH_FULFILLED,
-    GET_ALL_SKETCH_REJECTED,
-  } from '../_redux/types';
 
 const initialState = {
   sketch: [],
@@ -13,22 +8,22 @@ const initialState = {
 
 const sketch = (state = initialState, action) => {
   switch (action.type) {
-    case GET_ALL_SKETCH_PENDING:
+    case `GET_ALL_SKETCH_PENDING`:
       return {
         ...state,
-        isLoading: action.payload,
+        isLoading: true,
       };
-    case GET_ALL_SKETCH_FULFILLED:
+    case `GET_ALL_SKETCH_FULFILLED`:
       return {
         ...state,
-        sketch: action.payload,
-        isLoading: action.isLoading,
+        sketch: action.payload.data,
+        isLoading: false,
       };
-    case GET_ALL_SKETCH_REJECTED:
+    case `GET_ALL_SKETCH_REJECTED`:
       return {
         ...state,
-        error: action.payload,
-        isLoading: action.isLoading,
+        error: true,
+        isLoading: false,
       };
     default:
       return state;

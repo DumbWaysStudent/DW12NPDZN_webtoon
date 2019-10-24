@@ -1,8 +1,3 @@
-import {
-  GET_FAVS_PENDING,
-  GET_FAVS_FULFILLED,
-  GET_FAVS_REJECTED,
-} from '../_redux/types'
 
 const initialState = {
   favorite: [],
@@ -12,22 +7,23 @@ const initialState = {
 
 const favorite = (state = initialState, action) => {
   switch (action.type) {
-    case GET_FAVS_PENDING:
+    case `GET_FAVS_PENDING`:
       return {
         ...state,
-        isLoading: action.payload,
+        isLoading: true,
       };
-    case GET_FAVS_FULFILLED:
+    case `GET_FAVS_FULFILLED`:
       return {
         ...state,
-        favorite: action.payload,
-        isLoading: action.isLoading,
+        favorite: action.payload.data,
+        isLoading: false,
       };
-    case GET_FAVS_REJECTED:
+    case `GET_FAVS_REJECTED`:
       return {
         ...state,
-        error: action.payload,
-        isLoading: action.isLoading,
+        error: true,
+        favorite: [],
+        isLoading: false,
       };
     default:
       return state;

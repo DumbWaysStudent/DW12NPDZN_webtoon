@@ -1,31 +1,30 @@
 
 
-import {
-    GET_ALL_SKETCH_PENDING,
-    GET_ALL_SKETCH_FULFILLED,
-    GET_ALL_SKETCH_REJECTED,
-  } from '../_redux/types';
+import axios from 'axios'
+import config from '../../config-env'
   
-  export const fetchData = res => {
-    return {
-      type: GET_ALL_SKETCH_PENDING,
-      payload: res,
-    };
-  };
-  
-  export const fetchDataFulfilled = data => {
-    return {
-      type: GET_ALL_SKETCH_FULFILLED,
-      payload: data,
-      isLoading: false,
-    };
-  };
-  
-  export const fetchDataRejected = error => {
-    return {
-      type: GET_ALL_SKETCH_REJECTED,
-      payload: error,
-      isLoading: false,
-    };
-  };
-  
+
+
+export const getAllSketch = () => {
+  return {
+    type: `GET_ALL_SKETCH`,
+    payload: axios({
+      method: 'GET',
+      url: `${config.API_URL}/sketches`
+  })
+}}
+
+
+export const getFav = (id, token) => {
+  return {
+    type: 'GET_FAVS',
+    payload: axios({
+      method: 'GET',
+      headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${token}`
+        },
+      url: `${config.API_URL}/user/${id}/favorites`
+    })
+  }}
+
