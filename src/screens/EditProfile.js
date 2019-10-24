@@ -10,36 +10,82 @@ import {
 import {
     Container, 
     Content, 
-    Text,
-    Row,
-    Left,
-    Right,
-    Body,
-    Title,
-    Header,
-    Form, 
-    Item, 
-    Input, 
-    Button, 
     Icon,  
     } 
     from 'native-base';
 import ImagePicker from 'react-native-image-picker';
 import config from '../../config-env'
+import AsyncStorage from '@react-native-community/async-storage';
+import {connect} from 'react-redux'
+import axios from 'axios'
+import * as act from '../_actions/user'
 
-export default class EditProfile extends React.Component {
- 
+class EditProfile extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-        pic: this.props.navigation.getParam('pic'),
-        username: this.props.navigation.getParam('username'),
-        avatarSource: null,
+        avatarSource: '',
+        username: '',
+        id: null,
+        token: null
     }
 
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
     
+  }
+
+  async componentDidMount(){
+    await this.getToken()
+    await this.getId()
+    this.showUser()
+    this.props.navigation.setParams({ editAndBack: this.editAndBack})
+  }
+
+  async getToken () {
+    const getToken = await AsyncStorage.getItem('token')
+    if (getToken !== null) {
+      this.setState({
+        token: getToken
+      })
+    } else {
+      alert('You Must Login to access this screen')
+      this.props.navigation.navigate('Login')
+    }   
+  }
+
+  async getId () {
+      await AsyncStorage.getItem('id').then(key=>
+        this.setState({
+          id: JSON.parse(key)
+        }))
+    }
+
+  showUser = () => {  
+    this.props.getUser(id = this.state.id, token = this.state.token)
+    this.setState({
+      username: this.props.user.user.username,
+      avatarSource: {uri:this.props.user.user.image}
+    })
+  }
+
+  editAndBack = () => {
+ 
+    axios({
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json',
+        'authorization': `Bearer ${this.state.token}`
+      },
+      url: `${config.API_URL}/user/${this.state.id}`,
+      data: this.createFormData(this.state.avatarSource,
+      {
+        username: this.state.username, 
+      })
+    })
+    .then(res => {
+      this.props.navigation.navigate('Profile')
+    })
   }
 
   selectPhotoTapped() {
@@ -62,15 +108,28 @@ export default class EditProfile extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
-
-        this.setState({
-          avatarSource: source,
-          
-        });
+        if (response.uri) {
+          this.setState({ avatarSource: response })
+          console.log(this.state.avatarSource)
+        }
       }
     });
   }
+
+  createFormData = (photo, body) => {
+    const data = new FormData();
+  
+    data.append("photo", {
+      name: photo.fileName,
+      type: photo.type,
+      uri: photo.uri  
+    });
+    Object.keys(body).forEach(key => {
+      data.append(key, body[key]);
+    });
+  
+    return data;
+  };
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -83,13 +142,15 @@ export default class EditProfile extends React.Component {
         },
         headerRight: (
             <Icon type="Entypo" name='check' style={styles.BBIcon} 
-            onPress = {() => navigation.navigate('Profile')}
+            onPress = {navigation.getParam('editAndBack')}
             />
             ),
         };
     }
 
   render() {
+    const {user} = this.props
+
     return (
       <Container>
           <Content>
@@ -97,12 +158,8 @@ export default class EditProfile extends React.Component {
             <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
             <View
                 style={[styles.avatar, styles.avatarContainer]}>
-                {this.state.avatarSource === null ? (
-                <Image style={styles.avatar} source={{uri:this.state.pic }} />
-                ) : (
-                <Image style={styles.avatar} source={this.state.avatarSource} />
-                )}
                 
+                <Image style={styles.avatar} source={this.state.avatarSource} />
             </View>
             </TouchableOpacity>
         </View>
@@ -121,6 +178,23 @@ export default class EditProfile extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+  }
+}
+
+const mapDispatchToProps = dispatch =>  {
+  return {
+    getUser: (id,token) => dispatch(act.getUser(id,token))
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditProfile)
 
 const styles = StyleSheet.create({
   Header: {

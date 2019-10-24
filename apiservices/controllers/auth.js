@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 const models = require('../models')
 const User = models.user
 
+const ip = `http://192.168.43.122:5001/`
+
 exports.register = (req, res) => {
   const data = req.body
 
@@ -33,3 +35,19 @@ exports.login = (req, res)=>{
     }
   })
 }
+
+exports.show = (req,res) =>{
+  User.findOne({where: {id : req.params.id}}).then(user=>{
+      res.send(user)
+      })
+}
+
+exports.update = (req,res) => {
+  User.update({
+    username: req.body.username,
+    image: ip + req.file.path
+  },{where: {id: req.params.id}}
+  ).then(user => {res.send({ message: 'success'})})
+}
+
+

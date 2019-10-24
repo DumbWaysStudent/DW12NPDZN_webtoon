@@ -17,21 +17,27 @@ import {
 import { StyleSheet, Image, } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
+import {connect} from 'react-redux'
+import * as act from '../_actions/user'
 
 
-export default class Profile extends Component{
+class Profile extends Component{
 
     constructor(props){
         super(props);
         this.state ={
-            pic: "https://scontent.fcgk1-1.fna.fbcdn.net/v/t1.0-9/16265366_404431113233498_256851812072885448_n.jpg?_nc_cat=100&_nc_oc=AQktlMnBMwEVFZ9of9YsmK_h_hGgdt40CSUeC2RR2_nXktOJpKeVijqnj10p8Wg0qk8&_nc_ht=scontent.fcgk1-1.fna&oh=971e3a86ea6a37b3d5e50c5f220c719a&oe=5E17E637",
-            username: "Syaiful",
-            token: null
+            token: null,
+            id: null
         }
     }
 
     async componentDidMount(){
         await this.getToken()
+        await this.getId()
+        this.showUser()
+        this.focusListener = this.props.navigation.addListener('didFocus', () => {
+          this.showUser()
+        })
       }
 
     async getToken () {
@@ -45,14 +51,28 @@ export default class Profile extends Component{
         this.props.navigation.navigate('Login')
       }   
     }
+
+    async getId () {
+        await AsyncStorage.getItem('id').then(key=>
+          this.setState({
+            id: JSON.parse(key)
+          }))
+      }
+
+    showUser = () => {  
+      this.props.getUser(id = this.state.id, token = this.state.token)
+    }
     
     async logout() {
         await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('id');
         this.props.navigation.navigate('Login')
     }
 
 
     render(){
+      const {user} = this.props
+
         return(
             <Container>
                 <Header style={styles.Header}>
@@ -63,8 +83,8 @@ export default class Profile extends Component{
                 </Body>
                 <Right>
                     <Button transparent onPress={() => this.props.navigation.navigate('EditProfile',{
-                  pic: this.state.pic,
-                  username: this.state.username
+                  pic: user.user.image,
+                  username: user.user.username
                 })}>
                     <Icon type="Entypo" name='edit' style={styles.BBIcon}/>
                     </Button>
@@ -72,8 +92,8 @@ export default class Profile extends Component{
                 </Header>
                 <Content>
                     <View style={styles.ImgCont}>
-                         <Image style={styles.Img} source={{uri: this.state.pic }}/>
-                         <Text style={styles.Username}>{this.state.username}</Text>
+                         <Image style={styles.Img} source={{uri: user.user.image }}/>
+                         <Text style={styles.Username}>{user.user.username}</Text>
                     </View>
                     <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('MyCreation')}
@@ -94,6 +114,22 @@ export default class Profile extends Component{
     }
 }
 
+const mapStateToProps = state => {
+    return {
+      user: state.user,
+    }
+  }
+
+  const mapDispatchToProps = dispatch =>  {
+    return {
+      getUser: (id,token) => dispatch(act.getUser(id,token))
+    }
+  }
+
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Profile)
 
 const styles = StyleSheet.create({
     Header: {

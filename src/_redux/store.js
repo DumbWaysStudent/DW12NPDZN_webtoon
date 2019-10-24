@@ -4,10 +4,12 @@ import { logger, promise } from './middleware'
 
 import sketch from '../_reducers/sketch'
 import favorite from '../_reducers/fav'
+import user from '../_reducers/user'
 
 const reducers = combineReducers({
   sketch,
-  favorite
+  favorite,
+  user
 })
   
 const store = createStore(

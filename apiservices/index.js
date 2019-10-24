@@ -4,7 +4,7 @@ const multer = require('multer')
 const bodyParser = require('body-parser')
 
 const app = express()
-const port = 5001
+const port = Number (process.env.PORT || 5001)
 
 //multer
 const Storage = multer.diskStorage({
@@ -35,6 +35,8 @@ app.group("/api/v1", (router) => {
 
 	router.post('/register', AuthController.register)
 	router.post('/login', AuthController.login)
+	router.get('/user/:id', authenticated, AuthController.show)
+	router.put('/user/:id', upload.single('photo'), authenticated, AuthController.update)
 
 	router.get('/sketches', SketchController.index)
 	// router.get('/sketches/favorites', authenticated, SketchController.favoriteIndex)	
